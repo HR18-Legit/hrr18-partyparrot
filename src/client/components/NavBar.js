@@ -37,7 +37,7 @@ export default class NavBar extends React.Component {
                 <NotAuthenticated>
                 <li className="nav-item">
                   <button className="btn-flat waves-effect waves-light btn-light">
-                    <a href="/login"> Sign In </a>
+                    <a href="/clientlogin"> Sign In </a>
                   </button>
                 </li>
                 <li className="nav-item">

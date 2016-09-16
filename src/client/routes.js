@@ -6,11 +6,13 @@ import UserDetails from './components/UserDetails';
 import Index from './components/Index';
 import PartyParrot from './components/PartyParrot';
 import { Route, IndexRoute } from 'react-router';
-import { LogoutRoute, AuthenticatedRoute } from 'react-stormpath';
+import ReactStormpath, { LogoutRoute, Router, AuthenticatedRoute, LoginLink } from 'react-stormpath';
+import LoginPage from './components/authentication/Login';
 
 export default (
   <Route path="/" component={App}>
     <IndexRoute component={Index} />
+    <Route path='/clientlogin' component={LoginPage} />
     <AuthenticatedRoute>
       <LogoutRoute path="/logout" />
       <Route path ="/create" component={CreateEvent} />

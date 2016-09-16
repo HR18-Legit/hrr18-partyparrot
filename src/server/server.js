@@ -7,6 +7,7 @@ var stormpath = require('express-stormpath');
 var Eventbrite = require('eventbrite-node');
 var config = require('../config/eventbrite');
 var Event = require('./models/event');
+var User  = require('./models/users');
 var client = new Eventbrite(config.clientKey, config.clientSecret);
 
 //Alias for heroku ports/db vs local
@@ -22,11 +23,31 @@ var app = express();
 // storm path application being used to do the authentication for this app.
 // Please change this for your application
 app.use(stormpath.init(app, {
-  application:{
-    href: 'https://api.stormpath.com/v1/applications/38BYzfpt1mubNI49Sj9nC4'
+  application: {
+    href: 'https://api.stormpath.com/v1/applications/1CRNyLHi8Nyf3Us1waWwVp'
   },
-  website: true
-}));
+  website: true,
+  postRegistrationHandler: function (account, req, res, next) {
+    console.log('User:', account.email, account, 'just registered!')
+    var user = new User({
+      firstName: account.givenName,
+      lastName: account.surname,
+      email: account.email
+    })
+    user.save(function (err, post) {
+      if (err) { console.error(err) }
+    })
+    next()
+  },
+    postLoginHandler: function (account, req, res, next) {
+      console.log('User:', account, 'just logged in!');
+      next()
+
+      User.findOne({email: account.email}, function (err, account) {
+        console.log(account)
+      })
+    }
+}))
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../public'));
 
@@ -79,7 +100,10 @@ app.get('/secrets', stormpath.loginRequired, function(req,res){
 
 // If no app.get path was found for request, this is the default, which will
 // then use the react router
+app.set('view engine', 'pug')
+
 app.get('*', function (req, res) {
+  //res.render('index', {test: 'test1'})
  res.sendFile(path.join(__dirname, '/../public/index.html'));
 });
 
