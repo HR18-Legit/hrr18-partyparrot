@@ -19,3 +19,6 @@ src/config
 .floo
 .flooignore
 .DS_Store
+
+#db
+data/db/*
