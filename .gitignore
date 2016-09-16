@@ -1,5 +1,17 @@
 # Node modules
-node_modules/
+node_modules
+
+# Built files
+src/public/bundle.js
+src/public/bundle.js.map
+
+# Secrets
+apiKey.properties
+src/config
+
+# Mac OS
+**/*.DS_Store
+
 
 # Floobits
 .floo
