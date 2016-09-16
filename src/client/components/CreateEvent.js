@@ -41,16 +41,16 @@ export default class CreateEvent extends React.Component {
           {/* begin realtime search */}
 
           <form style={{ 'width':'100%' }}
-                onChange={ () => this.search(this.searchByName.value, this.searchByCity.value) }>
+                onChange={ () => this.search(this.refs.keyword.value, this.refs.location.value) }>
 
             <input  className="inputEventInfo"
                     placeholder="Event Keyword..."
-                    ref={ (input) => this.searchByName = input } />
+                    ref="keyword" />
 
             <input  className="inputEventInfo"
                     placeholder="Event City..."
                     style={{ 'borderLeft':'none' }}
-                    ref ={ (input) => this.searchByCity = input } />
+                    ref="location" />
 
             {/* <button className="searchBtn"
                     type='button'
@@ -152,8 +152,8 @@ export default class CreateEvent extends React.Component {
     });
   }
 
-  search(query, city){
-    var url = `https://www.eventbriteapi.com/v3/events/search/?q=${query}&sort_by=best&location.address=${city}&token=YZO3HZ5MJZYKY6QU64H2`;
+  search(keyword, location){
+    var url = `https://www.eventbriteapi.com/v3/events/search/?q=${keyword}&sort_by=best&location.address=${location}&token=YZO3HZ5MJZYKY6QU64H2`;
     Request.get(url).then((response) => {
       this.setState({
         events: response.body.events
