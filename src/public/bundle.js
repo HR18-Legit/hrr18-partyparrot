@@ -36728,9 +36728,9 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _Navbar = __webpack_require__(/*! ./Navbar */ 534);
+	var _NavBar = __webpack_require__(/*! ./NavBar */ 558);
 	
-	var _Navbar2 = _interopRequireDefault(_Navbar);
+	var _NavBar2 = _interopRequireDefault(_NavBar);
 	
 	var _Footer = __webpack_require__(/*! ./Footer */ 536);
 	
@@ -36777,7 +36777,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'app' },
-	        _react2.default.createElement(_Navbar2.default, null),
+	        _react2.default.createElement(_NavBar2.default, null),
 	        childrenWithProps,
 	        _react2.default.createElement(_Footer2.default, null)
 	      );
@@ -36848,169 +36848,7 @@
 	};
 
 /***/ },
-/* 534 */
-/*!*****************************************!*\
-  !*** ./src/client/components/Navbar.js ***!
-  \*****************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(/*! react */ 299);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRouter = __webpack_require__(/*! react-router */ 469);
-	
-	var _reactStormpath = __webpack_require__(/*! react-stormpath */ 535);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var NavBar = function (_React$Component) {
-	  _inherits(NavBar, _React$Component);
-	
-	  function NavBar() {
-	    _classCallCheck(this, NavBar);
-	
-	    return _possibleConstructorReturn(this, (NavBar.__proto__ || Object.getPrototypeOf(NavBar)).apply(this, arguments));
-	  }
-	
-	  _createClass(NavBar, [{
-	    key: 'render',
-	    value: function render() {
-	      return _react2.default.createElement(
-	        'div',
-	        { className: 'nav-bar' },
-	        _react2.default.createElement(
-	          'nav',
-	          { className: 'navbar navbar-dark navbar-fixed-top scrolling-navbar navbar-flat' },
-	          _react2.default.createElement(
-	            'button',
-	            { className: 'navbar-toggler hidden-sm-up', type: 'button', 'data-toggle': 'collapse', 'data-target': '#collapseEx' },
-	            _react2.default.createElement('i', { className: 'fa fa-bars' })
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'wide' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'collapse navbar-toggleable-xs', id: 'collapseEx' },
-	              _react2.default.createElement(
-	                'a',
-	                { className: 'navbar-brand', href: '#', target: '_blank' },
-	                _react2.default.createElement('img', { src: 'img/Logo.svg', style: { "width": "50px" } })
-	              ),
-	              _react2.default.createElement(
-	                'ul',
-	                { className: 'nav navbar-nav pull-right', style: { "marginTop": "3px" } },
-	                _react2.default.createElement(
-	                  'li',
-	                  { className: 'nav-item' },
-	                  _react2.default.createElement(
-	                    'button',
-	                    { className: 'btn-flat waves-effect waves-light btn-light' },
-	                    _react2.default.createElement(
-	                      _reactRouter.Link,
-	                      { to: '/' },
-	                      'Home'
-	                    )
-	                  )
-	                ),
-	                _react2.default.createElement(
-	                  _reactStormpath.Authenticated,
-	                  null,
-	                  _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
-	                    _react2.default.createElement(
-	                      'button',
-	                      { className: 'btn-flat waves-effect waves-light btn-light' },
-	                      _react2.default.createElement(
-	                        'a',
-	                        { href: '/profile' },
-	                        ' Profile '
-	                      )
-	                    )
-	                  ),
-	                  _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
-	                    _react2.default.createElement(
-	                      'button',
-	                      { className: 'btn-flat waves-effect waves-light btn-light' },
-	                      _react2.default.createElement(
-	                        _reactRouter.Link,
-	                        { to: '/create' },
-	                        'Create Event'
-	                      )
-	                    )
-	                  ),
-	                  _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
-	                    _react2.default.createElement(
-	                      'button',
-	                      { className: 'btn-flat waves-effect waves-light btn-light' },
-	                      _react2.default.createElement(_reactStormpath.LogoutLink, null)
-	                    )
-	                  )
-	                ),
-	                _react2.default.createElement(
-	                  _reactStormpath.NotAuthenticated,
-	                  null,
-	                  _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
-	                    _react2.default.createElement(
-	                      'button',
-	                      { className: 'btn-flat waves-effect waves-light btn-light' },
-	                      _react2.default.createElement(
-	                        'a',
-	                        { href: '/clientlogin' },
-	                        ' Sign In '
-	                      )
-	                    )
-	                  ),
-	                  _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
-	                    _react2.default.createElement(
-	                      'button',
-	                      { className: 'btn-flat waves-effect waves-light btn-light' },
-	                      _react2.default.createElement(
-	                        'a',
-	                        { href: '/register' },
-	                        ' Sign Up '
-	                      )
-	                    )
-	                  )
-	                )
-	              )
-	            )
-	          )
-	        )
-	      );
-	    }
-	  }]);
-	
-	  return NavBar;
-	}(_react2.default.Component);
-	
-	exports.default = NavBar;
-
-/***/ },
+/* 534 */,
 /* 535 */
 /*!****************************************!*\
   !*** ./~/react-stormpath/lib/index.js ***!
@@ -53793,6 +53631,169 @@
 	}
 	
 	module.exports = shallowEqual;
+
+/***/ },
+/* 558 */
+/*!*****************************************!*\
+  !*** ./src/client/components/NavBar.js ***!
+  \*****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 299);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 469);
+	
+	var _reactStormpath = __webpack_require__(/*! react-stormpath */ 535);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var NavBar = function (_React$Component) {
+	  _inherits(NavBar, _React$Component);
+	
+	  function NavBar() {
+	    _classCallCheck(this, NavBar);
+	
+	    return _possibleConstructorReturn(this, (NavBar.__proto__ || Object.getPrototypeOf(NavBar)).apply(this, arguments));
+	  }
+	
+	  _createClass(NavBar, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'nav-bar' },
+	        _react2.default.createElement(
+	          'nav',
+	          { className: 'navbar navbar-dark navbar-fixed-top scrolling-navbar navbar-flat' },
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'navbar-toggler hidden-sm-up', type: 'button', 'data-toggle': 'collapse', 'data-target': '#collapseEx' },
+	            _react2.default.createElement('i', { className: 'fa fa-bars' })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'wide' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'collapse navbar-toggleable-xs', id: 'collapseEx' },
+	              _react2.default.createElement(
+	                'a',
+	                { className: 'navbar-brand', href: '#', target: '_blank' },
+	                _react2.default.createElement('img', { src: 'img/Logo.svg', style: { "width": "50px" } })
+	              ),
+	              _react2.default.createElement(
+	                'ul',
+	                { className: 'nav navbar-nav pull-right', style: { "marginTop": "3px" } },
+	                _react2.default.createElement(
+	                  'li',
+	                  { className: 'nav-item' },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { className: 'btn-flat waves-effect waves-light btn-light' },
+	                    _react2.default.createElement(
+	                      _reactRouter.Link,
+	                      { to: '/' },
+	                      'Home'
+	                    )
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  _reactStormpath.Authenticated,
+	                  null,
+	                  _react2.default.createElement(
+	                    'li',
+	                    { className: 'nav-item' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { className: 'btn-flat waves-effect waves-light btn-light' },
+	                      _react2.default.createElement(
+	                        'a',
+	                        { href: '/profile' },
+	                        ' Profile '
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'li',
+	                    { className: 'nav-item' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { className: 'btn-flat waves-effect waves-light btn-light' },
+	                      _react2.default.createElement(
+	                        _reactRouter.Link,
+	                        { to: '/create' },
+	                        'Create Event'
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'li',
+	                    { className: 'nav-item' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { className: 'btn-flat waves-effect waves-light btn-light' },
+	                      _react2.default.createElement(_reactStormpath.LogoutLink, null)
+	                    )
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  _reactStormpath.NotAuthenticated,
+	                  null,
+	                  _react2.default.createElement(
+	                    'li',
+	                    { className: 'nav-item' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { className: 'btn-flat waves-effect waves-light btn-light' },
+	                      _react2.default.createElement(
+	                        'a',
+	                        { href: '/clientlogin' },
+	                        ' Sign In '
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'li',
+	                    { className: 'nav-item' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { className: 'btn-flat waves-effect waves-light btn-light' },
+	                      _react2.default.createElement(
+	                        'a',
+	                        { href: '/register' },
+	                        ' Sign Up '
+	                      )
+	                    )
+	                  )
+	                )
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return NavBar;
+	}(_react2.default.Component);
+	
+	exports.default = NavBar;
 
 /***/ }
 /******/ ]);
