@@ -21,5 +21,7 @@ src/config
 #db
 data/db/*
 
+# secret stuff
+legit_node.pem
 
 
