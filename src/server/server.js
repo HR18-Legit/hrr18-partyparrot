@@ -38,6 +38,12 @@ var app = express();
 // storm path application being used to do the authentication for this app.
 // Please change this for your application
 app.use(stormpath.init(app, {
+  web: {
+    register: {
+      autoLogin: false,
+      nextUri: '/'
+    }
+  },
   application: {
     href: 'https://api.stormpath.com/v1/applications/1CRNyLHi8Nyf3Us1waWwVp'
   },
@@ -52,7 +58,8 @@ app.use(stormpath.init(app, {
     user.save(function (err, post) {
       if (err) { console.error(err) }
     })
-    next()
+    res.redirect(302, 'http://localhost:8080/clientlogin')
+    
   },
     postLoginHandler: function (account, req, res, next) {
       console.log('User:', account, 'just logged in!');
