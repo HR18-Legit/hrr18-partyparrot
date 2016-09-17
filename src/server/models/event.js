@@ -1,16 +1,16 @@
 var mongoose = require('mongoose');
+
 var eventSchema = new mongoose.Schema({
   name: String,
   desc: String,
-  promoters: [],
-  owner: String,
-  gPoint: String,
+  userEmail: String,
+  gPoint: Number,
   gReward: String,
-  sPoint: String,
+  sPoint: Number,
   sReward: String,
-  bPoint: String,
+  bPoint: Number,
   bReward: String,
   eventbrite: {},
   created_at: {type:Date, default: Date.now}
 });
-module.exports = mongoose.model("Event", eventSchema);
+module.exports = eventSchema;
