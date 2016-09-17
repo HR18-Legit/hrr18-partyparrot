@@ -7,6 +7,7 @@ var userSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   email: String,
+  bio: String,
   events: [ Event ],
   eventsPromoting: [ Promoting ],
   created_at: {type: Date, default: Date.now}

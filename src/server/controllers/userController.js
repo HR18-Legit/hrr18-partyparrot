@@ -10,6 +10,17 @@ var findUser = Q.nbind(User.findOne, User);
 var findUsers = Q.nbind(User.find, User);
 
 module.exports = {
+    getUser: function(req, res){
+        console.log(req.params.email)
+        findUser({"email": req.params.email})
+            .then(function(user){
+                res.json(user);
+            })
+            .catch(function(err){
+                res.json(err);
+            })
+    },
+
     addPromoter: function(req, res){
 
         findUser({"email": req.body.userEmail})
@@ -82,9 +93,10 @@ module.exports = {
     },
 
     getUserEvents: function(req,res) {
-        console.log(req.params.email)
-        findUser({'_id': req.params.id}) 
+        console.log(req.params.id)
+        findUser({"email": req.params.email}) 
             .then(function(user){
+                console.log(user);
                 res.json(user.events);
             })
             .catch(function(err){

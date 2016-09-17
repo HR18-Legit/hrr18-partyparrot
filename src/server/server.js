@@ -68,7 +68,7 @@ app.use(express.static(__dirname + '/../public'));
 
 //============ POST ================
 // Add a promoter to a specific event
-app.post('/add/promoter', UserController.addPromoter);
+app.post('/add/promoter', stormpath.loginRequired, UserController.addPromoter);
 
 // Easter Egg Disabled
 // app.get('/parrot', function(req,res){
@@ -76,9 +76,12 @@ app.post('/add/promoter', UserController.addPromoter);
 // })
 
 // Adds event to logged in user
-app.post('/add/event', UserController.addEvent);
+app.post('/add/event', stormpath.loginRequired, UserController.addEvent);
 
 //============ GET ================
+// Returns user info
+app.get('/user/:email', stormpath.loginRequired, UserController.getUser);
+
 // Returns all events for all users
 app.get('/events', function (req, res, next) {
   User.find({}, function(err, users) {
@@ -93,9 +96,10 @@ app.get('/events', function (req, res, next) {
 });
 
 // Returns single user's events
-app.get('/events/:id', UserController.getUserEvents);
+app.get('/user/:email/events', stormpath.loginRequired, UserController.getUserEvents);
 
-app.get('/eventdetails/:id/promoters', UserController.getPromoters);
+// Returns all promoters for a certain event
+app.get('/events/:id/promoters', UserController.getPromoters);
 
 // This is only a test to see if the user is authenticated, and not needed
 // for this project.
