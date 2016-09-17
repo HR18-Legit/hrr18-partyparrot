@@ -26,7 +26,7 @@ var UserController = require('./controllers/userController.js');
 // var connection = mongoose.connect(db);
 
 var PORT = process.env.PORT || 8080;
-//AWS OPTION FOR DB
+//AWS OPTION FOR MONGO DB
 var options = {
   user: 'legituser',
   pass: 'legitlegacy'
