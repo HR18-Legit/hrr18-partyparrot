@@ -7,7 +7,7 @@ var Event = require('../models/event.js');
 var Q = require('q');
 
 var findUser = Q.nbind(User.findOne, User);
-var findUsers = Q.bind(User.find, User);
+var findUsers = Q.nbind(User.find, User);
 
 module.exports = {
     addPromoter: function(req, res){
@@ -43,7 +43,7 @@ module.exports = {
                     user.eventsPromoting.forEach(function(eventPromoting){
                         console.log("EVENT", eventPromoting)
                         if(eventPromoting.eventId === req.params.id){
-                            results.push(user);
+                            results.push(eventPromoting);
                         }
                     })
                 });
