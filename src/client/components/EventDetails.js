@@ -5,6 +5,14 @@ export default class EventDetails extends React.Component {
   constructor() {
     super();
 
+    /*
+
+    this.state = {
+      promoters: {} // username:bitlink --> then retrieve link click counts (no need to save in state)
+    }
+
+    */
+
     this.state = {
       shortenedUrl: 'Promotion URL',
       linkclickscount: 0,
@@ -13,14 +21,32 @@ export default class EventDetails extends React.Component {
   }
 
   componentWillMount() {
-    this.bitlyShortenLink(this.props.event.eventbrite.url);
-    this.bitlyGetUsername();
+
+    /*
+
+    Trigger an API request to GET all users who have subscribed to be promoters for this event,
+    then populate the leaderboard with their usernames and associated bitly links
+
+    */
+
+    this.bitlyShortenLink(this.props.event.eventbrite.url); // remove in favor of the above
+    //this.bitlyGetUsername();
   }
+
   componentDidMount() {
-    $('.card-text').append(this.props.event.eventbrite.description.html)
+    $('.card-text').append(this.props.event.eventbrite.description.html) // OK
   }
 
   componentWillUpdate(nextProps, nextState) {
+
+    /*
+
+    Is this required? Or will the user trigger this interaction when they subscribe to be a promoter?
+
+    I might need to create a new function that updates the state - then that should trigger a re-render
+
+    */
+
     this.bitlyLinkClicks(nextState.shortenedUrl);
   }
 
@@ -41,9 +67,22 @@ export default class EventDetails extends React.Component {
               <div className="card card-block">
                 <h4 className="card-title">Start Promoting Now!</h4>
                 <hr />
+
+                {/*
+
+                  Clicking this button will trigger the following interaction:
+
+                    1. Check if the user is logged in. If not, prompt login. Can we redirect from login/signup back to the same event page?
+                    2. Generate a unique bitlink for the logged-in user by appending '/#' + their email address or username to the event URL.
+                    3. Perform an API call to POST a new { event id : bitlink } into the logged-in user's hash table of { events : bitlinks }
+                    4. re-rended the leaderboard to include the subscribed user's name alongside the number of clicks for their unique bitlink
+
+                */}
+
                 <button className="btn btn-lg waves-effect waves-light" style={{"backgroundColor":"#ff5a00"}}>Promote with <img src="img/BitlyLogo.png" className="img-responsive img-fluid" style={{"width":"60px", "display":"inline"}} /></button>
-                <hr />
-                <input className="inputId" value={this.state.shortenedUrl} />
+
+                {/*<hr />
+                <input className="inputId" value={this.state.shortenedUrl} />*/}
               </div>
               <div className="card card-block">
                 <h4 className="card-title">Decription</h4>
@@ -102,10 +141,18 @@ export default class EventDetails extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
+
+                      {/*
+
+                        generate dynamic rows with usernames + link counts (need to modify that function as well) for all promoters
+
+                      */}
+
                       <tr>
                         <td>Max Doe</td>
                         <td>{this.state.linkclickscount}</td>
                       </tr>
+
                     </tbody>
                   </table>
                 </div>
@@ -130,6 +177,10 @@ export default class EventDetails extends React.Component {
   }
 
   bitlyShortenLink(currenturl) {
+
+    // send in username, and append to the url to produce unique bitlinks
+    // this function will be triggered by the user interaction - signup to promote this event
+
     var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
 
     $.ajax({
@@ -146,6 +197,9 @@ export default class EventDetails extends React.Component {
   }
 
   bitlyLinkClicks(linkclicksurl) {
+
+    // required to get link counts for each promoter's link; will be displayed in leaderboard
+
     var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
 
     $.ajax({
@@ -161,20 +215,22 @@ export default class EventDetails extends React.Component {
     });
   }
 
-  bitlyGetUsername() {
-    var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
+  // not sure why this was included
 
-    $.ajax({
-      url: "https://api-ssl.bitly.com/v3/user/info?access_token=" + ACCESS_TOKEN,
-      type: 'GET',
+  // bitlyGetUsername() {
+  //   var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
 
-      success: (data) => {
-        this.setState({username: data.data.full_name});
-      },
-      error: (data) => {
-        console.error('Failed to get bitly username. Error: ', data);
-      }
-    });
-  }
+  //   $.ajax({
+  //     url: "https://api-ssl.bitly.com/v3/user/info?access_token=" + ACCESS_TOKEN,
+  //     type: 'GET',
+
+  //     success: (data) => {
+  //       this.setState({username: data.data.full_name});
+  //     },
+  //     error: (data) => {
+  //       console.error('Failed to get bitly username. Error: ', data);
+  //     }
+  //   });
+  // }
 
 }

@@ -33,9 +33,12 @@ export default class App extends React.Component {
 
   getEvents() {
     $.ajax({
-      url: '/events',
+      url: `/events`,
       type: 'GET',
       success: function(events) {
+        events = events.filter(function (event) {
+          return event.eventbrite;
+        });
         this.setState({
           events: events
         })

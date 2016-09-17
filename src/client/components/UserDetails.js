@@ -37,7 +37,7 @@ export default class UserDetails extends React.Component {
   }
  getUserData() {
     $.ajax({
-      url: '/userEvents',
+      url: `/user/${localStorage.username}/events`,
       dataType: 'json',
       type: 'GET',
       success: (data) => {

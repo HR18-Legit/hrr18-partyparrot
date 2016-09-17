@@ -14,7 +14,7 @@ export default class CreateEvent extends React.Component {
   }
 
   render () {
-    console.log(this.props)
+    // console.log(this.props)
     var events = this.state.events.map(eventEntry => {
         return (
           <li style={{"marginTop":"20px"}} onClick={ () => this.selectEvent(eventEntry) }>
@@ -96,6 +96,7 @@ export default class CreateEvent extends React.Component {
               <hr />
               <h2 className="h2-responsive">Post your Event</h2>
               <button className="btn btn-lg btn-default waves-effect waves-light" onClick={() => this.handleSubmit({
+                userEmail: localStorage.username,
                 gPoint: this.gPoint.value,
                 gReward: this.gReward.value,
                 sPoint: this.sPoint.value,
@@ -138,7 +139,7 @@ export default class CreateEvent extends React.Component {
 
   handleSubmit(eventObj) {
     $.ajax({
-      url: '/create',
+      url: '/add/event',
       contentType: 'application/json',
       type: 'POST',
       data: JSON.stringify(eventObj),
