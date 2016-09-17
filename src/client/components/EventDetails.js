@@ -7,7 +7,8 @@ export default class EventDetails extends React.Component {
 
     this.state = {
       id: props.event.eventbrite.id,
-      promoters: [], // elements should be {username:bitlink} pairs
+      shortenedUrl: 'subscribe above to generate a link!',
+      promoters: {}, // {username:bitlink}
       promotersUpdated: false
     }
 
@@ -56,7 +57,7 @@ export default class EventDetails extends React.Component {
     // update the event if promoters have signed up
     if (this.state.promotersUpdated) {
 
-      console.log(this.params);
+      console.log(this.state);
 
       this.setState({
         promotersUpdated: false
@@ -85,17 +86,6 @@ export default class EventDetails extends React.Component {
                 <h4 className="card-title">Start Promoting Now!</h4>
                 <hr />
 
-                {/*
-
-                  Clicking this button will trigger the following interaction:
-
-                    1. Check if the user is logged in. If not, prompt login. Can we redirect from login/signup back to the same event page?
-                    2. Generate a unique bitlink for the logged-in user by appending '/#' + their email address or username to the event URL.
-                    3. Perform an API call to POST a new { event id : bitlink } into the logged-in user's hash table of { events : bitlinks }
-                    4. re-rended the leaderboard to include the subscribed user's name alongside the number of clicks for their unique bitlink
-
-                */}
-
                 <button className="btn btn-lg waves-effect waves-light"
                         style={{"backgroundColor":"#ff5a00"}}
                         onClick={() => {this.signupToPromote()}}>
@@ -104,8 +94,8 @@ export default class EventDetails extends React.Component {
                                           style={{"width":"60px", "display":"inline"}} />
                 </button>
 
-                {/*<hr />
-                <input className="inputId" value={this.state.shortenedUrl} />*/}
+                <hr />
+                <textarea className="inputId" value={this.state.shortenedUrl} />
               </div>
               <div className="card card-block">
                 <h4 className="card-title">Decription</h4>
@@ -200,17 +190,13 @@ export default class EventDetails extends React.Component {
   }
 
   signupToPromote() {
-
     var url = this.props.event.eventbrite.url + '#' + localStorage.username;
-    console.log(url);
-
     this.bitlyShortenLink(url);
-
   }
 
   bitlyShortenLink(url) {
 
-    var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
+    var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
 
     $.ajax({
       url: "https://api-ssl.bitly.com/v3/shorten?access_token=" + ACCESS_TOKEN + "&longUrl=" + url + "&format=txt",
@@ -218,12 +204,10 @@ export default class EventDetails extends React.Component {
       success: (data) => {
         console.log(data);
         var promoters = this.state.promoters;
-        promoters.push({
-          username: localStorage.username,
-          bitlink: data
-        })
+        promoters[localStorage.username] = data.data.url;
         this.setState({
           promoters: promoters,
+          shortenedUrl: data.data.url,
           promotersUpdated: true
         })
       },
@@ -237,7 +221,7 @@ export default class EventDetails extends React.Component {
 
     // required to get link counts for each promoter's link; will be displayed in leaderboard
 
-    var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
+    var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
 
     $.ajax({
       url: "https://api-ssl.bitly.com/v3/link/clicks?access_token=" + ACCESS_TOKEN + "&link=" + linkclicksurl,
@@ -251,23 +235,5 @@ export default class EventDetails extends React.Component {
       }
     });
   }
-
-  // not sure why this was included
-
-  // bitlyGetUsername() {
-  //   var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
-
-  //   $.ajax({
-  //     url: "https://api-ssl.bitly.com/v3/user/info?access_token=" + ACCESS_TOKEN,
-  //     type: 'GET',
-
-  //     success: (data) => {
-  //       this.setState({username: data.data.full_name});
-  //     },
-  //     error: (data) => {
-  //       console.error('Failed to get bitly username. Error: ', data);
-  //     }
-  //   });
-  // }
 
 }
