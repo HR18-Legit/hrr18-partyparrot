@@ -58,6 +58,9 @@ export default class Category extends React.Component {
       url: '/events',
       type: 'GET',
       success: function(events) {
+        events = events.filter(function (event) {
+          return event.eventbrite;
+        });
         events.map(event => {
           if (event.eventbrite.category_id === this.props.category.categoryId) {
             linkedEvents.push(event);
