@@ -53,18 +53,13 @@ export default class Category extends React.Component {
   }
 
   getEvents() {
-    var linkedEvents = [];
+    var _this = this;
     $.ajax({
       url: '/events',
       type: 'GET',
       success: function(events) {
-        events = events.filter(function (event) {
-          return event.eventbrite;
-        });
-        events.map(event => {
-          if (event.eventbrite.category_id === this.props.category.categoryId) {
-            linkedEvents.push(event);
-          }
+        var linkedEvents = events.filter(function (event) {
+          return event.eventbrite && event.eventbrite.category_id === _this.props.category.categoryId;
         });
         this.setState({
           events: linkedEvents

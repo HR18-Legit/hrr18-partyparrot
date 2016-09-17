@@ -79,7 +79,7 @@ createCategoryList() {
     this.setState({
       selectedEvent: event
     });
-    this.context.router.push('/EventDetails');
+    this.context.router.push(`/EventDetails`);
   }
 }
 

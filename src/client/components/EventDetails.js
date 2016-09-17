@@ -2,25 +2,40 @@ import React from 'react';
 
 
 export default class EventDetails extends React.Component {
-  constructor() {
-    super();
-
-    /*
+  constructor(props) {
+    super(props);
 
     this.state = {
-      promoters: {} // username:bitlink --> then retrieve link click counts (no need to save in state)
+      id: props.event.eventbrite.id,
+      promoters: [], // elements should be {username:bitlink} pairs
+      promotersUpdated: false
     }
 
-    */
-
-    this.state = {
-      shortenedUrl: 'Promotion URL',
-      linkclickscount: 0,
-      username: 'username'
-    }
+    // this.state = {
+    //   shortenedUrl: 'Promotion URL',
+    //   linkclickscount: 0,
+    //   username: 'username'
+    // }
   }
 
   componentWillMount() {
+
+    // var id = this.props.location.pathname.split('/')[1];
+    console.log(this.state.id);
+    $.ajax({
+      url: `/events/${this.props.id}/promoters`,
+      dataType: 'json',
+      type: 'GET',
+      success: (data) => {
+        console.log(data)
+        this.setState({
+          promoters: data
+        });
+      },
+      error: (err,data) => {
+        console.error(err.toString());
+      }
+    });
 
     /*
 
@@ -29,7 +44,7 @@ export default class EventDetails extends React.Component {
 
     */
 
-    this.bitlyShortenLink(this.props.event.eventbrite.url); // remove in favor of the above
+    //this.bitlyShortenLink(this.props.event.eventbrite.url);
     //this.bitlyGetUsername();
   }
 
@@ -38,15 +53,17 @@ export default class EventDetails extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
+    // update the event if promoters have signed up
+    if (this.state.promotersUpdated) {
 
-    /*
+      console.log(this.params);
 
-    Is this required? Or will the user trigger this interaction when they subscribe to be a promoter?
+      this.setState({
+        promotersUpdated: false
+      })
+    }
 
-    I might need to create a new function that updates the state - then that should trigger a re-render
-
-    */
-
+    // trigger a re-count of all links whenever the component updates
     this.bitlyLinkClicks(nextState.shortenedUrl);
   }
 
@@ -79,7 +96,13 @@ export default class EventDetails extends React.Component {
 
                 */}
 
-                <button className="btn btn-lg waves-effect waves-light" style={{"backgroundColor":"#ff5a00"}}>Promote with <img src="img/BitlyLogo.png" className="img-responsive img-fluid" style={{"width":"60px", "display":"inline"}} /></button>
+                <button className="btn btn-lg waves-effect waves-light"
+                        style={{"backgroundColor":"#ff5a00"}}
+                        onClick={() => {this.signupToPromote()}}>
+                        Promote with <img src="img/BitlyLogo.png"
+                                          className="img-responsive img-fluid"
+                                          style={{"width":"60px", "display":"inline"}} />
+                </button>
 
                 {/*<hr />
                 <input className="inputId" value={this.state.shortenedUrl} />*/}
@@ -176,19 +199,33 @@ export default class EventDetails extends React.Component {
     )
   }
 
-  bitlyShortenLink(currenturl) {
+  signupToPromote() {
 
-    // send in username, and append to the url to produce unique bitlinks
-    // this function will be triggered by the user interaction - signup to promote this event
+    var url = this.props.event.eventbrite.url + '#' + localStorage.username;
+    console.log(url);
+
+    this.bitlyShortenLink(url);
+
+  }
+
+  bitlyShortenLink(url) {
 
     var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
 
     $.ajax({
-      url: "https://api-ssl.bitly.com/v3/shorten?access_token=" + ACCESS_TOKEN + "&longUrl=" + currenturl + "&format=txt",
+      url: "https://api-ssl.bitly.com/v3/shorten?access_token=" + ACCESS_TOKEN + "&longUrl=" + url + "&format=txt",
       type: 'GET',
       success: (data) => {
-        this.setState({shortenedUrl: data});
-        console.log('data bitlyShortenLink ', data);
+        console.log(data);
+        var promoters = this.state.promoters;
+        promoters.push({
+          username: localStorage.username,
+          bitlink: data
+        })
+        this.setState({
+          promoters: promoters,
+          promotersUpdated: true
+        })
       },
       error: (data) => {
         console.error('Failed to get shortened URL. Error: ', data);
