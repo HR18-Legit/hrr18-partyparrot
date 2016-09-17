@@ -14,22 +14,22 @@
 
 // npm install --save stripe
 //server side
-var stripe = require("stripe")("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
+// var stripe = require("stripe")("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
 
-app.post('/api/payment', function(req, res, next) {
-// Get the credit card details submitted by the form
-var token = req.body.stripeToken;
+// app.post('/api/payment', function(req, res, next) {
+// // Get the credit card details submitted by the form
+// var token = req.body.stripeToken;
 
-// Create a charge: this will charge the user's card
-var charge = stripe.charges.create({
-  amount: 1000,
-  currency: "usd",
-  source: token,
-  description: "Example charge"
-}, function(err, charge) {
-  if (err && err.type === 'StripeCardError') {
+// // Create a charge: this will charge the user's card
+// var charge = stripe.charges.create({
+//   amount: 1000,
+//   currency: "usd",
+//   source: token,
+//   description: "Example charge"
+// }, function(err, charge) {
+//   if (err && err.type === 'StripeCardError') {
 
-  }
-});
+//   }
+// });
 
-});
+// });

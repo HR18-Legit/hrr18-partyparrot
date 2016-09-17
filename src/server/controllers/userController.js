@@ -79,6 +79,7 @@ module.exports = {
                     "sReward": req.body.sReward,
                     "bPoint": req.body.bPoint,
                     "bReward": req.body.bReward,
+                    "amountRaised": req.body.amountRaised,
                     "eventbrite": req.body.event
                 });
 
