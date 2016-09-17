@@ -1,8 +1,18 @@
 {
-  "name": "nameofproject",
+  "name": "Legacy",
   "version": "1.0.0",
-  "description": "Desc of Project",
+  "description": "Legacy project. Event management insentivising app",
   "main": "index.js",
+  "repository":{
+    "type": "git",
+    "url": "https://github.com/HR18-Legit/hrr18-partyparrot.git"
+  },
+  "contributors": [
+    "Aman Thaper",
+    "Yara Tercero-Parker",
+    "Graham Wimbrow",
+    "John Fritz"
+  ],
   "scripts": {
     "start": "nodemon src/server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
