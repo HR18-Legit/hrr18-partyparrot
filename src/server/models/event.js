@@ -10,6 +10,7 @@ var eventSchema = new mongoose.Schema({
   sReward: String,
   bPoint: Number,
   bReward: String,
+  amountRaised: String,
   eventbrite: {},
   created_at: {type:Date, default: Date.now}
 });

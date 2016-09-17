@@ -42,6 +42,12 @@ var app = express();
 // storm path application being used to do the authentication for this app.
 // Please change this for your application
 app.use(stormpath.init(app, {
+  web: {
+     register: {
+       autoLogin: false,
+       nextUri: '/'
+     }
+  },
   application: {
     href: 'https://api.stormpath.com/v1/applications/1CRNyLHi8Nyf3Us1waWwVp'
   },
@@ -55,8 +61,9 @@ app.use(stormpath.init(app, {
     })
     user.save(function (err, post) {
       if (err) { console.error(err) }
+      res.redirect(302, 'http://localhost:8080/clientlogin')
     })
-    next()
+    
   },
     postLoginHandler: function (account, req, res, next) {
       console.log('User:', account, 'just logged in!');
@@ -142,6 +149,41 @@ app.get('/authentication', function(req, res){
 //This is an entry point for stormpath integration.
 app.on('stormpath.ready', function() {
   app.listen(PORT);
+});
+
+//============ STRIPE PAYMENT ================
+var stripe = require("stripe")("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
+
+app.post('/api/payment', function(req, res, next) {
+// Get the credit card details submitted by the form
+var token = req.body.stripeToken;
+
+// Create a charge: this will charge the user's card
+var charge = stripe.charges.create({
+  amount: 1000,
+  currency: "usd",
+  source: token,
+  description: "Example charge"
+  }, function(err, charge) {
+    if (err && err.type === 'StripeCardError') {
+
+    }else{
+      User.find({"email": req.body.email})
+        .then(function(user){
+          user.events.forEach(function(event){
+            if(event._id === req.body.eventId){
+              event.amountRaised = Number(event.amountRaised) + charge.amount;
+
+              user.save(function (err) {
+                  if (err) {console.error(err)}
+                  res.status(201).json({message: 'Amount raised updated'});
+              });
+            }
+          })
+        })
+    }
+  });
+
 });
 
 module.exports = app;
