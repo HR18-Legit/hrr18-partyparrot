@@ -20,14 +20,18 @@ var User  = require('./models/users');
 var UserController = require('./controllers/userController.js');
 
 
-//Alias for heroku ports/db vs local
+//LOCAL OPTION FOR DB
 // var PORT = process.env.PORT || 8080;
 // var db =  'mongodb://localhost/PartyParrot';
 // var connection = mongoose.connect(db);
 
 var PORT = process.env.PORT || 8080;
-var db =  process.env.MONGODB_URI || 'mongodb://localhost/PartyParrot';
-mongoose.connect(db);
+//AWS OPTION FOR DB
+var options = {
+  user: 'legituser',
+  pass: 'legitlegacy'
+};
+mongoose.connect('mongodb://54.173.68.94:27017/legit', options);
 
 //mongoose's promise library is depricated.
 mongoose.Promise = global.Promise;
