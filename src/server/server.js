@@ -1,14 +1,24 @@
+//============ set up ================
 var express = require('express');
-var path = require('path');
-var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var middleware = './middleware/middleware';
+
+var path = require('path');
+var bodyParser = require('body-parser');
+
+//============ external apis ================
 var stormpath = require('express-stormpath');
 var Eventbrite = require('eventbrite-node');
 var config = require('../config/eventbrite');
+var client = new Eventbrite(config.clientKey, config.clientSecret);
+
+//============ models ================
 var Event = require('./models/event');
 var User  = require('./models/users');
-var client = new Eventbrite(config.clientKey, config.clientSecret);
+
+//============ controllers ================
+var Promoters = require('./controllers/promoterController.js');
+
 
 //Alias for heroku ports/db vs local
 var PORT = process.env.PORT || 8080;
@@ -19,6 +29,7 @@ mongoose.connect(db);
 mongoose.Promise = global.Promise;
 var app = express();
 
+//============ STORMPATH ================
 // Setups stormpath. The application:{href: https://..} is unique to the
 // storm path application being used to do the authentication for this app.
 // Please change this for your application
@@ -51,9 +62,15 @@ app.use(stormpath.init(app, {
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../public'));
 
-app.get('/parrot', function(req,res){
-  res.sendFile(path.join(__dirname, '/../public/parrot.html'));
-})
+//============ POST ================
+// Add a promoter to a specific event
+app.post('/eventdetails/promoter', Promoters.addPromoter);
+
+// Easter Egg Disabled
+// app.get('/parrot', function(req,res){
+//   res.sendFile(path.join(__dirname, '/../public/parrot.html'));
+// })
+
 //In the interest of time and speed we created one schema to avoid joins
 app.post('/create',stormpath.loginRequired, function(req,res){
   var event = new Event({
@@ -75,21 +92,24 @@ app.post('/create',stormpath.loginRequired, function(req,res){
   });
 });
 
+//============ GET ================
 // Returns all events independent of what user is logged in
 app.get('/events', function (req, res, next) {
   Event.find(function(err, events) {
     if (err) { console.error(err) }
     res.json(events);
-  })
-})
+  });
+});
 
 // Returns events that only the user who is logged in has created
 app.get('/userEvents', stormpath.loginRequired, function(req,res) {
   Event.find({'owner': req.user.username}, function(err, event) {
     if (err) console.error(err);
     res.json(event);
-  })
-})
+  });
+});
+
+app.get('/eventdetails/:id/promoters', Promoters.getPromoters);
 
 // This is only a test to see if the user is authenticated, and not needed
 // for this project.
@@ -102,6 +122,8 @@ app.get('/secrets', stormpath.loginRequired, function(req,res){
 // then use the react router
 app.set('view engine', 'pug')
 
+
+//============ CATCH ALL ================
 app.get('*', function (req, res) {
   //res.render('index', {test: 'test1'})
  res.sendFile(path.join(__dirname, '/../public/index.html'));
@@ -109,6 +131,7 @@ app.get('*', function (req, res) {
 
 
 
+//============ EVENTBRITE ================
 //Eventbrite auth. Currently single user.
 app.get('/authentication', function(req, res){
   var authUrl = client.getOAuthUrl();
