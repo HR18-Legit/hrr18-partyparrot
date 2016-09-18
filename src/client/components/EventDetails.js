@@ -2,25 +2,41 @@ import React from 'react';
 
 
 export default class EventDetails extends React.Component {
-  constructor() {
-    super();
-
-    /*
+  constructor(props) {
+    super(props);
 
     this.state = {
-      promoters: {} // username:bitlink --> then retrieve link click counts (no need to save in state)
+      id: props.event.eventbrite.id,
+      shortenedUrl: 'subscribe above to generate a link!',
+      promoters: {}, // {username:bitlink}
+      promotersUpdated: false
     }
 
-    */
-
-    this.state = {
-      shortenedUrl: 'Promotion URL',
-      linkclickscount: 0,
-      username: 'username'
-    }
+    // this.state = {
+    //   shortenedUrl: 'Promotion URL',
+    //   linkclickscount: 0,
+    //   username: 'username'
+    // }
   }
 
   componentWillMount() {
+
+    // var id = this.props.location.pathname.split('/')[1];
+    console.log(this.state.id);
+    $.ajax({
+      url: `/events/${this.props.id}/promoters`,
+      dataType: 'json',
+      type: 'GET',
+      success: (data) => {
+        console.log(data)
+        this.setState({
+          promoters: data
+        });
+      },
+      error: (err,data) => {
+        console.error(err.toString());
+      }
+    });
 
     /*
 
@@ -29,7 +45,7 @@ export default class EventDetails extends React.Component {
 
     */
 
-    this.bitlyShortenLink(this.props.event.eventbrite.url); // remove in favor of the above
+    //this.bitlyShortenLink(this.props.event.eventbrite.url);
     //this.bitlyGetUsername();
   }
 
@@ -38,15 +54,17 @@ export default class EventDetails extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
+    // update the event if promoters have signed up
+    if (this.state.promotersUpdated) {
 
-    /*
+      console.log(this.state);
 
-    Is this required? Or will the user trigger this interaction when they subscribe to be a promoter?
+      this.setState({
+        promotersUpdated: false
+      })
+    }
 
-    I might need to create a new function that updates the state - then that should trigger a re-render
-
-    */
-
+    // trigger a re-count of all links whenever the component updates
     this.bitlyLinkClicks(nextState.shortenedUrl);
   }
 
@@ -68,21 +86,16 @@ export default class EventDetails extends React.Component {
                 <h4 className="card-title">Start Promoting Now!</h4>
                 <hr />
 
-                {/*
+                <button className="btn btn-lg waves-effect waves-light"
+                        style={{"backgroundColor":"#ff5a00"}}
+                        onClick={() => {this.signupToPromote()}}>
+                        Promote with <img src="img/BitlyLogo.png"
+                                          className="img-responsive img-fluid"
+                                          style={{"width":"60px", "display":"inline"}} />
+                </button>
 
-                  Clicking this button will trigger the following interaction:
-
-                    1. Check if the user is logged in. If not, prompt login. Can we redirect from login/signup back to the same event page?
-                    2. Generate a unique bitlink for the logged-in user by appending '/#' + their email address or username to the event URL.
-                    3. Perform an API call to POST a new { event id : bitlink } into the logged-in user's hash table of { events : bitlinks }
-                    4. re-rended the leaderboard to include the subscribed user's name alongside the number of clicks for their unique bitlink
-
-                */}
-
-                <button className="btn btn-lg waves-effect waves-light" style={{"backgroundColor":"#ff5a00"}}>Promote with <img src="img/BitlyLogo.png" className="img-responsive img-fluid" style={{"width":"60px", "display":"inline"}} /></button>
-
-                {/*<hr />
-                <input className="inputId" value={this.state.shortenedUrl} />*/}
+                <hr />
+                <textarea className="inputId" value={this.state.shortenedUrl} />
               </div>
               <div className="card card-block">
                 <h4 className="card-title">Decription</h4>
@@ -176,19 +189,27 @@ export default class EventDetails extends React.Component {
     )
   }
 
-  bitlyShortenLink(currenturl) {
+  signupToPromote() {
+    var url = this.props.event.eventbrite.url + '#' + localStorage.username;
+    this.bitlyShortenLink(url);
+  }
 
-    // send in username, and append to the url to produce unique bitlinks
-    // this function will be triggered by the user interaction - signup to promote this event
+  bitlyShortenLink(url) {
 
-    var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
+    var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
 
     $.ajax({
-      url: "https://api-ssl.bitly.com/v3/shorten?access_token=" + ACCESS_TOKEN + "&longUrl=" + currenturl + "&format=txt",
+      url: "https://api-ssl.bitly.com/v3/shorten?access_token=" + ACCESS_TOKEN + "&longUrl=" + url + "&format=txt",
       type: 'GET',
       success: (data) => {
-        this.setState({shortenedUrl: data});
-        console.log('data bitlyShortenLink ', data);
+        console.log(data);
+        var promoters = this.state.promoters;
+        promoters[localStorage.username] = data.data.url;
+        this.setState({
+          promoters: promoters,
+          shortenedUrl: data.data.url,
+          promotersUpdated: true
+        })
       },
       error: (data) => {
         console.error('Failed to get shortened URL. Error: ', data);
@@ -200,7 +221,7 @@ export default class EventDetails extends React.Component {
 
     // required to get link counts for each promoter's link; will be displayed in leaderboard
 
-    var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
+    var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
 
     $.ajax({
       url: "https://api-ssl.bitly.com/v3/link/clicks?access_token=" + ACCESS_TOKEN + "&link=" + linkclicksurl,
@@ -214,23 +235,5 @@ export default class EventDetails extends React.Component {
       }
     });
   }
-
-  // not sure why this was included
-
-  // bitlyGetUsername() {
-  //   var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
-
-  //   $.ajax({
-  //     url: "https://api-ssl.bitly.com/v3/user/info?access_token=" + ACCESS_TOKEN,
-  //     type: 'GET',
-
-  //     success: (data) => {
-  //       this.setState({username: data.data.full_name});
-  //     },
-  //     error: (data) => {
-  //       console.error('Failed to get bitly username. Error: ', data);
-  //     }
-  //   });
-  // }
 
 }

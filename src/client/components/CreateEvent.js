@@ -97,6 +97,7 @@ export default class CreateEvent extends React.Component {
               <h2 className="h2-responsive">Post your Event</h2>
               <button className="btn btn-lg btn-default waves-effect waves-light" onClick={() => this.handleSubmit({
                 userEmail: localStorage.username,
+                name: this.state.selectedEvent.name.html,
                 gPoint: this.gPoint.value,
                 gReward: this.gReward.value,
                 sPoint: this.sPoint.value,
@@ -111,6 +112,9 @@ export default class CreateEvent extends React.Component {
       </div>
       )
     } else {
+
+    {/* what is happening here I have no idea */}
+
       return (
         <div>
           <Event
@@ -146,6 +150,9 @@ export default class CreateEvent extends React.Component {
       success: (data) => {
         this.setState({data: data});
         this.setState({submitted: "submitted"});
+
+        // don't understand what is happening once the event has been created.
+        // shouldn't this redirect us to the event details page?
       },
       error: (xhr, status, err) => {
         this.clearForm();
