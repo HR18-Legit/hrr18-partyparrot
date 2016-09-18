@@ -16,7 +16,7 @@ var client = new Eventbrite(config.clientKey, config.clientSecret);
 var Event = require('./models/event');
 var User  = require('./models/users');
 
-//============ controllers ================
+//============ controllers ===============
 var UserController = require('./controllers/userController.js');
 
 
@@ -94,17 +94,10 @@ app.post('/add/event', stormpath.loginRequired, UserController.addEvent);
 app.get('/user/:email', stormpath.loginRequired, UserController.getUser);
 
 // Returns all events for all users
-app.get('/events', function (req, res, next) {
-  User.find({}, function(err, users) {
-    if (err) { console.error(err) }
-    var events = [];
-    users.forEach(function(user){
-      events = events.concat(user.events);
-    })
-    console.log(events);
-    res.json(events);
-  });
-});
+app.get('/events', UserController.getAllEvents);
+
+// Returns one event
+app.get('/events/:id', stormpath.loginRequired, UserController.getEvent);
 
 // Returns single user's events
 app.get('/user/:email/events', stormpath.loginRequired, UserController.getUserEvents);
@@ -114,9 +107,9 @@ app.get('/events/:id/promoters', UserController.getPromoters);
 
 // This is only a test to see if the user is authenticated, and not needed
 // for this project.
-app.get('/secrets', stormpath.loginRequired, function(req,res){
-  res.send('Hi ' + req.user.givenName);
-})
+// app.get('/secrets', stormpath.loginRequired, function(req,res){
+//   res.send('Hi ' + req.user.givenName);
+// })
 
 
 // If no app.get path was found for request, this is the default, which will
