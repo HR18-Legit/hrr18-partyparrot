@@ -1,5 +1,5 @@
 import React from 'react';
-
+import TakeMoney from './Payment';
 
 export default class EventDetails extends React.Component {
   constructor(props) {
@@ -95,8 +95,19 @@ export default class EventDetails extends React.Component {
                                           style={{"width":"60px", "display":"inline"}} />
                 </button>
 
+
                 <hr />
+
                 <input className="inputId" value={this.state.shortenedUrl} />
+
+                <textarea className="inputId" value={this.state.shortenedUrl} />
+
+                <TakeMoney />
+                <button className="btn btn-lg waves-effect waves-light" style={{"backgroundColor":"#ff5a00"}}>Promote with <img src="img/BitlyLogo.png" className="img-responsive img-fluid" style={{"width":"60px", "display":"inline"}} /></button>
+
+                {/*<hr />
+                <input className="inputId" value={this.state.shortenedUrl} />*/}
+
               </div>
               <div className="card card-block">
                 <h4 className="card-title">Decription</h4>
