@@ -19,7 +19,6 @@ export default (
       <Route path ="/create" component={CreateEvent} />
       <Route path ="/eventDetails" component={EventDetails} />
       <Route path ="/profile" component={UserDetails} />
-      <Route path ="/partyMode" component={PartyParrot} />
       <Route path ="/promoter" component={Promoters} />
     </AuthenticatedRoute>
   </Route>

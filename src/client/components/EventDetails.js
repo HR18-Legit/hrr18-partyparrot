@@ -5,27 +5,22 @@ export default class EventDetails extends React.Component {
   constructor(props) {
     super(props);
 
+    this.promotersUpdated = false;
+
     this.state = {
       id: props.event.eventbrite.id,
       shortenedUrl: 'subscribe above to generate a link!',
-      promoters: {}, // {username:bitlink}
-      promotersUpdated: false
+      promoters: []
     }
 
-    // this.state = {
-    //   shortenedUrl: 'Promotion URL',
-    //   linkclickscount: 0,
-    //   username: 'username'
-    // }
   }
 
   componentWillMount() {
 
-    // var id = this.props.location.pathname.split('/')[1];
     console.log(this.state.id);
     $.ajax({
       url: `/events/${this.props.id}/promoters`,
-      dataType: 'json',
+      contentType: 'application/json',
       type: 'GET',
       success: (data) => {
         console.log(data)
@@ -38,15 +33,6 @@ export default class EventDetails extends React.Component {
       }
     });
 
-    /*
-
-    Trigger an API request to GET all users who have subscribed to be promoters for this event,
-    then populate the leaderboard with their usernames and associated bitly links
-
-    */
-
-    //this.bitlyShortenLink(this.props.event.eventbrite.url);
-    //this.bitlyGetUsername();
   }
 
   componentDidMount() {
@@ -55,17 +41,32 @@ export default class EventDetails extends React.Component {
 
   componentWillUpdate(nextProps, nextState) {
     // update the event if promoters have signed up
-    if (this.state.promotersUpdated) {
+    // add this event to the new promoter's list of owned events
+    if (this.promotersUpdated) {
 
-      console.log(this.state);
+      $.ajax({
+        url: '/add/promoter',
+        contentType: 'application/json',
+        type: 'POST',
+        data: JSON.stringify({
+          userEmail: localStorage.username,
+          eventId: this.props.id,
+          bitlyLink: this.state.shortenedUrl
+        }),
+        success: (conf) => {
+          console.log(conf);
+        },
+        error: (err) => {
+          console.log(err);
+        }
+      });
 
-      this.setState({
-        promotersUpdated: false
-      })
+      this.promotersUpdated = false;
+
     }
 
     // trigger a re-count of all links whenever the component updates
-    this.bitlyLinkClicks(nextState.shortenedUrl);
+    // this.bitlyLinkClicks(nextState.shortenedUrl);
   }
 
   render () {
@@ -95,7 +96,7 @@ export default class EventDetails extends React.Component {
                 </button>
 
                 <hr />
-                <textarea className="inputId" value={this.state.shortenedUrl} />
+                <input className="inputId" value={this.state.shortenedUrl} />
               </div>
               <div className="card card-block">
                 <h4 className="card-title">Decription</h4>
@@ -157,7 +158,7 @@ export default class EventDetails extends React.Component {
 
                       {/*
 
-                        generate dynamic rows with usernames + link counts (need to modify that function as well) for all promoters
+                        generate dynamic rows with usernames + link counts for all promoters
 
                       */}
 
@@ -197,24 +198,33 @@ export default class EventDetails extends React.Component {
   bitlyShortenLink(url) {
 
     var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
+    var promoters = this.state.promoters;
 
-    $.ajax({
-      url: "https://api-ssl.bitly.com/v3/shorten?access_token=" + ACCESS_TOKEN + "&longUrl=" + url + "&format=txt",
-      type: 'GET',
-      success: (data) => {
-        console.log(data);
-        var promoters = this.state.promoters;
-        promoters[localStorage.username] = data.data.url;
-        this.setState({
-          promoters: promoters,
-          shortenedUrl: data.data.url,
-          promotersUpdated: true
-        })
-      },
-      error: (data) => {
-        console.error('Failed to get shortened URL. Error: ', data);
-      }
-    });
+    if (!promoters.filter((record) => {
+      return record.username === localStorage.username;
+    }).length) {
+
+      $.ajax({
+        url: "https://api-ssl.bitly.com/v3/shorten?access_token=" + ACCESS_TOKEN + "&longUrl=" + url + "&format=txt",
+        type: 'GET',
+        success: (data) => {
+          console.log(data);
+          promoters.push({
+            username: localStorage.username,
+            url: data.data.url
+          });
+          this.promotersUpdated = true;
+          this.setState({
+            promoters: promoters,
+            shortenedUrl: data.data.url
+          });
+          console.log(this.state);
+        },
+        error: (data) => {
+          console.error('Failed to get shortened URL. Error: ', data);
+        }
+      });
+    }
   }
 
   bitlyLinkClicks(linkclicksurl) {
