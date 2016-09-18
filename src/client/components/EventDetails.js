@@ -8,7 +8,7 @@ export default class EventDetails extends React.Component {
     this.state = {
       id: props.event.eventbrite.id,
       shortenedUrl: 'subscribe above to generate a link!',
-      promoters: {}, // {username:bitlink}
+      promoters: [], // {username:bitlink}
       promotersUpdated: false
     }
 
@@ -65,7 +65,7 @@ export default class EventDetails extends React.Component {
     }
 
     // trigger a re-count of all links whenever the component updates
-    this.bitlyLinkClicks(nextState.shortenedUrl);
+    // this.bitlyLinkClicks(nextState.shortenedUrl);
   }
 
   render () {
@@ -95,7 +95,7 @@ export default class EventDetails extends React.Component {
                 </button>
 
                 <hr />
-                <textarea className="inputId" value={this.state.shortenedUrl} />
+                <input className="inputId" value={this.state.shortenedUrl} />
               </div>
               <div className="card card-block">
                 <h4 className="card-title">Decription</h4>
@@ -204,7 +204,10 @@ export default class EventDetails extends React.Component {
       success: (data) => {
         console.log(data);
         var promoters = this.state.promoters;
-        promoters[localStorage.username] = data.data.url;
+        promoters.push({
+          username: localStorage.username,
+          url: data.data.url
+        });
         this.setState({
           promoters: promoters,
           shortenedUrl: data.data.url,
