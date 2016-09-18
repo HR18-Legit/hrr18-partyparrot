@@ -1,6 +1,7 @@
 import React from 'react'
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import PromoterLeft from './promoterLeft'
+import PromoterRight from './promoterRight'
 
 
 export default class Promoters extends React.Component {
@@ -34,7 +35,10 @@ export default class Promoters extends React.Component {
 
   render () {
     return (
-      <PromoterLeft data={this.state} />
+      <div>
+        <PromoterLeft data={this.state} />
+        <PromoterRight data={this.state} />
+      </div>
      )
   }
 }
