@@ -96,7 +96,7 @@ export default class EventDetails extends React.Component {
                 </button>
 
                 <hr />
-                <input className="inputId" defaultValue={this.state.shortenedUrl} />
+                <input className="inputId" value={this.state.shortenedUrl} />
               </div>
               <div className="card card-block">
                 <h4 className="card-title">Decription</h4>
