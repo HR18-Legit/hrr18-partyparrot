@@ -53860,6 +53860,7 @@
 	    _this.state = {
 	      firstName: '',
 	      lastName: '',
+	      photo: '',
 	      eventsPromoting: []
 	    };
 	    _this.componentDidMount = _this.componentDidMount.bind(_this);
@@ -53876,6 +53877,7 @@
 	        this.setState({
 	          firstName: promoter.firstName,
 	          lastName: promoter.lastName,
+	          photo: promoter.photo,
 	          eventsPromoting: promoter.eventsPromoting
 	        });
 	      }.bind(this));
@@ -54320,9 +54322,9 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        console.log(this.props.data.firstName),
+	        console.log(this.props.data),
 	        _react2.default.createElement(
-	          'h1',
+	          'h2',
 	          null,
 	          ' ',
 	          this.props.data.firstName,

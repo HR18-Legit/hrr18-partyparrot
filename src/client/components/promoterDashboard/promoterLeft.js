@@ -6,8 +6,8 @@ export default class PromoterLeft extends React.Component {
   render () {
     return (
       <div>
-      {console.log(this.props.data.firstName)}
-        <h1> {this.props.data.firstName} {this.props.data.lastName} </h1>
+      {console.log(this.props.data)}
+        <h2> {this.props.data.firstName} {this.props.data.lastName} </h2>
       </div>
       )
   }

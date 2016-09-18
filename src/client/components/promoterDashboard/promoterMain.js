@@ -9,6 +9,7 @@ export default class Promoters extends React.Component {
     this.state = {
       firstName: '',
       lastName: '',
+      photo: '',
       eventsPromoting: []
     }
     this.componentDidMount = this.componentDidMount.bind(this)
@@ -21,6 +22,7 @@ export default class Promoters extends React.Component {
       this.setState({
         firstName: promoter.firstName,
         lastName: promoter.lastName,
+        photo: promoter.photo,
         eventsPromoting: promoter.eventsPromoting
       })
     }.bind(this))
