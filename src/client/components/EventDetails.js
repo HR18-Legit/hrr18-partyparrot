@@ -8,8 +8,8 @@ export default class EventDetails extends React.Component {
     this.promotersUpdated = false;
 
     this.state = {
-      id: props.event.eventbrite.id,
-      shortenedUrl: 'subscribe above to generate a link!',
+      id: props.event._id,
+      shortenedUrl: '',
       promoters: []
     }
 
@@ -18,8 +18,10 @@ export default class EventDetails extends React.Component {
   componentWillMount() {
 
     console.log(this.state.id);
+    var id = this.state.id;
+
     $.ajax({
-      url: `/events/${this.props.id}/promoters`,
+      url: `/events/${id}/promoters`,
       contentType: 'application/json',
       type: 'GET',
       success: (data) => {
@@ -50,8 +52,8 @@ export default class EventDetails extends React.Component {
         type: 'POST',
         data: JSON.stringify({
           userEmail: localStorage.username,
-          eventId: this.props.id,
-          bitlyLink: this.state.shortenedUrl
+          eventId: this.state.id,
+          bitlyLink: nextState.shortenedUrl
         }),
         success: (conf) => {
           console.log(conf);
@@ -85,6 +87,7 @@ export default class EventDetails extends React.Component {
             <div className="col-md-7">
               <div className="card card-block">
                 <h4 className="card-title">Start Promoting Now!</h4>
+
                 <hr />
 
                 <button className="btn btn-lg waves-effect waves-light"
@@ -95,18 +98,11 @@ export default class EventDetails extends React.Component {
                                           style={{"width":"60px", "display":"inline"}} />
                 </button>
 
+                <input className="inputId" placeholder='subscribe above to generate a link!' value={this.state.shortenedUrl}/>
 
                 <hr />
 
-                <input className="inputId" value={this.state.shortenedUrl} />
-
-                <textarea className="inputId" value={this.state.shortenedUrl} />
-
                 <TakeMoney />
-                <button className="btn btn-lg waves-effect waves-light" style={{"backgroundColor":"#ff5a00"}}>Promote with <img src="img/BitlyLogo.png" className="img-responsive img-fluid" style={{"width":"60px", "display":"inline"}} /></button>
-
-                {/*<hr />
-                <input className="inputId" value={this.state.shortenedUrl} />*/}
 
               </div>
               <div className="card card-block">
@@ -166,18 +162,18 @@ export default class EventDetails extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
+                      {this.state.promoters.map(promoter =>
+
+                        <tr key={promoter.url}>
+                          <td>{promoter.username}</td>
+                          <td>{promoter.points}</td>
+                        </tr>
+
+                        )}
 
                       {/*
-
                         generate dynamic rows with usernames + link counts for all promoters
-
                       */}
-
-                      <tr>
-                        <td>Max Doe</td>
-                        <td>{this.state.linkclickscount}</td>
-                      </tr>
-
                     </tbody>
                   </table>
                 </div>
@@ -222,7 +218,8 @@ export default class EventDetails extends React.Component {
           console.log(data);
           promoters.push({
             username: localStorage.username,
-            url: data.data.url
+            url: data.data.url,
+            points: 0
           });
           this.promotersUpdated = true;
           this.setState({
@@ -238,14 +235,16 @@ export default class EventDetails extends React.Component {
     }
   }
 
-  bitlyLinkClicks(linkclicksurl) {
+  updateLeaderboard() {
 
     // required to get link counts for each promoter's link; will be displayed in leaderboard
 
     var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
 
+    // for each promoter's bitlink:
+
     $.ajax({
-      url: "https://api-ssl.bitly.com/v3/link/clicks?access_token=" + ACCESS_TOKEN + "&link=" + linkclicksurl,
+      url: "https://api-ssl.bitly.com/v3/link/clicks?access_token=" + ACCESS_TOKEN + "&link=" + bitlink,
       type: 'GET',
 
       success: (data) => {
