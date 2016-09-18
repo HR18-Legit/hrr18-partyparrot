@@ -200,8 +200,8 @@ export default class EventDetails extends React.Component {
     var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
     var promoters = this.state.promoters;
 
-    if (!promoters.filter((username) => {
-      return username === localStorage.username;
+    if (!promoters.filter((record) => {
+      return record.username === localStorage.username;
     }).length) {
 
       $.ajax({
