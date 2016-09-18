@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Legacy project. Event management insentivising app",
   "main": "index.js",
-  "repository":{
+  "repository": {
     "type": "git",
     "url": "https://github.com/HR18-Legit/hrr18-partyparrot.git"
   },
