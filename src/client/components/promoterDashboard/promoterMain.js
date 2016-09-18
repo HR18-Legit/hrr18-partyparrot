@@ -3,7 +3,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import PromoterLeft from './promoterLeft'
 import PromoterRight from './promoterRight'
 
-
 export default class Promoters extends React.Component {
   constructor (props) {
     super(props)
