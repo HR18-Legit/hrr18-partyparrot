@@ -9,7 +9,7 @@ export default class EventDetails extends React.Component {
 
     this.state = {
       id: props.event.eventbrite.id,
-      shortenedUrl: 'subscribe above to generate a link!',
+      shortenedUrl: '',
       promoters: []
     }
 
@@ -95,7 +95,6 @@ export default class EventDetails extends React.Component {
                                           style={{"width":"60px", "display":"inline"}} />
                 </button>
 
-
                 <hr />
 
                 <input className="inputId" value={this.state.shortenedUrl} />
@@ -105,9 +104,8 @@ export default class EventDetails extends React.Component {
                 <TakeMoney />
                 <button className="btn btn-lg waves-effect waves-light" style={{"backgroundColor":"#ff5a00"}}>Promote with <img src="img/BitlyLogo.png" className="img-responsive img-fluid" style={{"width":"60px", "display":"inline"}} /></button>
 
-                {/*<hr />
-                <input className="inputId" value={this.state.shortenedUrl} />*/}
 
+                <input className="inputId" placeholder='subscribe above to generate a link!' value={this.state.shortenedUrl}/>
               </div>
               <div className="card card-block">
                 <h4 className="card-title">Decription</h4>
@@ -166,18 +164,18 @@ export default class EventDetails extends React.Component {
                       </tr>
                     </thead>
                     <tbody>
+                      {this.state.promoters.map(promoter =>
+
+                        <tr>
+                          <td>{promoter.username}</td>
+                          <td>{promoter.points}</td>
+                        </tr>
+
+                        )}
 
                       {/*
-
                         generate dynamic rows with usernames + link counts for all promoters
-
                       */}
-
-                      <tr>
-                        <td>Max Doe</td>
-                        <td>{this.state.linkclickscount}</td>
-                      </tr>
-
                     </tbody>
                   </table>
                 </div>
@@ -227,7 +225,8 @@ export default class EventDetails extends React.Component {
           this.promotersUpdated = true;
           this.setState({
             promoters: promoters,
-            shortenedUrl: data.data.url
+            shortenedUrl: data.data.url,
+            points: '0'
           });
           console.log(this.state);
         },
@@ -238,14 +237,16 @@ export default class EventDetails extends React.Component {
     }
   }
 
-  bitlyLinkClicks(linkclicksurl) {
+  updateLeaderboard() {
 
     // required to get link counts for each promoter's link; will be displayed in leaderboard
 
     var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
 
+    // for each promoter's bitlink:
+
     $.ajax({
-      url: "https://api-ssl.bitly.com/v3/link/clicks?access_token=" + ACCESS_TOKEN + "&link=" + linkclicksurl,
+      url: "https://api-ssl.bitly.com/v3/link/clicks?access_token=" + ACCESS_TOKEN + "&link=" + bitlink,
       type: 'GET',
 
       success: (data) => {
