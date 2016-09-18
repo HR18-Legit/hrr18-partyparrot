@@ -36691,6 +36691,10 @@
 	
 	var _Login2 = _interopRequireDefault(_Login);
 	
+	var _promoterMain = __webpack_require__(/*! ./components/promoterDashboard/promoterMain */ 558);
+	
+	var _promoterMain2 = _interopRequireDefault(_promoterMain);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = _react2.default.createElement(
@@ -36705,7 +36709,8 @@
 	    _react2.default.createElement(_reactRouter.Route, { path: '/create', component: _CreateEvent2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/eventDetails', component: _EventDetails2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: _UserDetails2.default }),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/partyMode', component: _PartyParrot2.default })
+	    _react2.default.createElement(_reactRouter.Route, { path: '/partyMode', component: _PartyParrot2.default }),
+	    _react2.default.createElement(_reactRouter.Route, { path: '/promoter', component: _promoterMain2.default })
 	  )
 	);
 
@@ -36728,7 +36733,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _NavBar = __webpack_require__(/*! ./NavBar */ 558);
+	var _NavBar = __webpack_require__(/*! ./NavBar */ 534);
 	
 	var _NavBar2 = _interopRequireDefault(_NavBar);
 	
@@ -36789,6 +36794,9 @@
 	        url: '/events',
 	        type: 'GET',
 	        success: function (events) {
+	          events = events.filter(function (event) {
+	            return event.eventbrite;
+	          });
 	          this.setState({
 	            events: events
 	          });
@@ -36848,7 +36856,169 @@
 	};
 
 /***/ },
-/* 534 */,
+/* 534 */
+/*!*****************************************!*\
+  !*** ./src/client/components/NavBar.js ***!
+  \*****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 299);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRouter = __webpack_require__(/*! react-router */ 469);
+	
+	var _reactStormpath = __webpack_require__(/*! react-stormpath */ 535);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var NavBar = function (_React$Component) {
+	  _inherits(NavBar, _React$Component);
+	
+	  function NavBar() {
+	    _classCallCheck(this, NavBar);
+	
+	    return _possibleConstructorReturn(this, (NavBar.__proto__ || Object.getPrototypeOf(NavBar)).apply(this, arguments));
+	  }
+	
+	  _createClass(NavBar, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'nav-bar' },
+	        _react2.default.createElement(
+	          'nav',
+	          { className: 'navbar navbar-dark navbar-fixed-top scrolling-navbar navbar-flat' },
+	          _react2.default.createElement(
+	            'button',
+	            { className: 'navbar-toggler hidden-sm-up', type: 'button', 'data-toggle': 'collapse', 'data-target': '#collapseEx' },
+	            _react2.default.createElement('i', { className: 'fa fa-bars' })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'wide' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'collapse navbar-toggleable-xs', id: 'collapseEx' },
+	              _react2.default.createElement(
+	                'a',
+	                { className: 'navbar-brand', href: '#', target: '_blank' },
+	                _react2.default.createElement('img', { src: 'img/Logo.svg', style: { "width": "50px" } })
+	              ),
+	              _react2.default.createElement(
+	                'ul',
+	                { className: 'nav navbar-nav pull-right', style: { "marginTop": "3px" } },
+	                _react2.default.createElement(
+	                  'li',
+	                  { className: 'nav-item' },
+	                  _react2.default.createElement(
+	                    'button',
+	                    { className: 'btn-flat waves-effect waves-light btn-light' },
+	                    _react2.default.createElement(
+	                      _reactRouter.Link,
+	                      { to: '/' },
+	                      'Home'
+	                    )
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  _reactStormpath.Authenticated,
+	                  null,
+	                  _react2.default.createElement(
+	                    'li',
+	                    { className: 'nav-item' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { className: 'btn-flat waves-effect waves-light btn-light' },
+	                      _react2.default.createElement(
+	                        'a',
+	                        { href: '/profile' },
+	                        ' Profile '
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'li',
+	                    { className: 'nav-item' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { className: 'btn-flat waves-effect waves-light btn-light' },
+	                      _react2.default.createElement(
+	                        _reactRouter.Link,
+	                        { to: '/create' },
+	                        'Create Event'
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'li',
+	                    { className: 'nav-item' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { className: 'btn-flat waves-effect waves-light btn-light' },
+	                      _react2.default.createElement(_reactStormpath.LogoutLink, null)
+	                    )
+	                  )
+	                ),
+	                _react2.default.createElement(
+	                  _reactStormpath.NotAuthenticated,
+	                  null,
+	                  _react2.default.createElement(
+	                    'li',
+	                    { className: 'nav-item' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { className: 'btn-flat waves-effect waves-light btn-light' },
+	                      _react2.default.createElement(
+	                        'a',
+	                        { href: '/clientlogin' },
+	                        ' Sign In '
+	                      )
+	                    )
+	                  ),
+	                  _react2.default.createElement(
+	                    'li',
+	                    { className: 'nav-item' },
+	                    _react2.default.createElement(
+	                      'button',
+	                      { className: 'btn-flat waves-effect waves-light btn-light' },
+	                      _react2.default.createElement(
+	                        'a',
+	                        { href: '/register' },
+	                        ' Sign Up '
+	                      )
+	                    )
+	                  )
+	                )
+	              )
+	            )
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return NavBar;
+	}(_react2.default.Component);
+	
+	exports.default = NavBar;
+
+/***/ },
 /* 535 */
 /*!****************************************!*\
   !*** ./~/react-stormpath/lib/index.js ***!
@@ -49925,7 +50095,7 @@
 	    value: function render() {
 	      var _this2 = this;
 	
-	      console.log(this.props);
+	      // console.log(this.props)
 	      var events = this.state.events.map(function (eventEntry) {
 	        return _react2.default.createElement(
 	          'li',
@@ -49955,7 +50125,7 @@
 	              _react2.default.createElement(
 	                'h1',
 	                { className: 'white-text h1-responsive' },
-	                'Create Your Event'
+	                'Promote Your Events'
 	              )
 	            )
 	          ),
@@ -49964,49 +50134,36 @@
 	            { className: 'wide text-md-center', style: { "marginTop": "70px" } },
 	            _react2.default.createElement(
 	              'h2',
-	              { className: 'h2-responsive' },
-	              'Search Your Event On Eventbrite'
+	              { className: 'h3-responsive' },
+	              'Search Event Titles and Locations'
+	            ),
+	            _react2.default.createElement(
+	              'form',
+	              { style: { 'width': '100%' },
+	                onChange: function onChange() {
+	                  return _this2.search(_this2.refs.keyword.value, _this2.refs.location.value);
+	                } },
+	              _react2.default.createElement('input', { className: 'inputEventInfo',
+	                placeholder: 'Event Keyword...',
+	                ref: 'keyword' }),
+	              _react2.default.createElement('input', { className: 'inputEventInfo',
+	                placeholder: 'Event City...',
+	                style: { 'borderLeft': 'none' },
+	                ref: 'location' })
 	            ),
 	            _react2.default.createElement(
 	              'div',
 	              { className: 'row margin-top' },
 	              _react2.default.createElement(
-	                'h3',
-	                { className: 'h3-responsive' },
-	                'By Name'
-	              ),
-	              _react2.default.createElement('hr', null),
-	              _react2.default.createElement(
-	                'form',
-	                { style: { 'width': '100%' } },
-	                _react2.default.createElement('input', { className: 'inputEventInfo', placeholder: 'Event Keyword...', ref: function ref(input) {
-	                    return _this2.searchByName = input;
-	                  } }),
-	                _react2.default.createElement('input', { className: 'inputEventInfo', placeholder: 'Event City...', style: { 'borderLeft': 'none' }, ref: function ref(input) {
-	                    return _this2.searchByCity = input;
-	                  } }),
-	                _react2.default.createElement(
-	                  'button',
-	                  { className: 'searchBtn', type: 'button', onClick: function onClick() {
-	                      return _this2.search(_this2.searchByName.value, _this2.searchByCity.value);
-	                    } },
-	                  _react2.default.createElement(
-	                    'i',
-	                    { className: 'material-icons', style: { "marginTop": "3px", "color": "#666" } },
-	                    'search'
-	                  )
-	                )
-	              ),
-	              _react2.default.createElement(
 	                'div',
 	                { className: 'col-xs-12' },
 	                _react2.default.createElement('hr', null),
 	                _react2.default.createElement(
-	                  'h2',
+	                  'h3',
 	                  { className: 'h2-responsive' },
-	                  'Select Your Event'
+	                  'Selected Event:'
 	                ),
-	                _react2.default.createElement('input', { className: 'inputId', style: { 'width': '75%' }, placeholder: 'Selected Event...', value: this.state.selectedEvent.name ? this.state.selectedEvent.name.html : "", readOnly: 'true', ref: 'eventName' }),
+	                _react2.default.createElement('input', { className: 'inputId', style: { 'width': '75%' }, value: this.state.selectedEvent.name ? this.state.selectedEvent.name.html : "", readOnly: 'true', ref: 'eventName' }),
 	                _react2.default.createElement(
 	                  'div',
 	                  { className: 'scrollBox margin-top text-xs-left' },
@@ -50063,6 +50220,7 @@
 	                  'button',
 	                  { className: 'btn btn-lg btn-default waves-effect waves-light', onClick: function onClick() {
 	                      return _this2.handleSubmit({
+	                        userEmail: localStorage.username,
 	                        gPoint: _this2.gPoint.value,
 	                        gReward: _this2.gReward.value,
 	                        sPoint: _this2.sPoint.value,
@@ -50110,7 +50268,7 @@
 	      var _this3 = this;
 	
 	      $.ajax({
-	        url: '/create',
+	        url: '/add/event',
 	        contentType: 'application/json',
 	        type: 'POST',
 	        data: JSON.stringify(eventObj),
@@ -50125,10 +50283,10 @@
 	    }
 	  }, {
 	    key: 'search',
-	    value: function search(query, city) {
+	    value: function search(keyword, location) {
 	      var _this4 = this;
 	
-	      var url = 'https://www.eventbriteapi.com/v3/events/search/?q=' + query + '&sort_by=best&location.address=' + city + '&token=YZO3HZ5MJZYKY6QU64H2';
+	      var url = 'https://www.eventbriteapi.com/v3/events/search/?q=' + keyword + '&sort_by=best&location.address=' + location + '&token=YZO3HZ5MJZYKY6QU64H2';
 	      _superagent2.default.get(url).then(function (response) {
 	        _this4.setState({
 	          events: response.body.events
@@ -52139,6 +52297,12 @@
 	  function EventDetails() {
 	    _classCallCheck(this, EventDetails);
 	
+	    /*
+	      this.state = {
+	      promoters: {} // username:bitlink --> then retrieve link click counts (no need to save in state)
+	    }
+	      */
+	
 	    var _this = _possibleConstructorReturn(this, (EventDetails.__proto__ || Object.getPrototypeOf(EventDetails)).call(this));
 	
 	    _this.state = {
@@ -52152,17 +52316,29 @@
 	  _createClass(EventDetails, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
-	      this.bitlyShortenLink(this.props.event.eventbrite.url);
-	      this.bitlyGetUsername();
+	
+	      /*
+	        Trigger an API request to GET all users who have subscribed to be promoters for this event,
+	      then populate the leaderboard with their usernames and associated bitly links
+	        */
+	
+	      this.bitlyShortenLink(this.props.event.eventbrite.url); // remove in favor of the above
+	      //this.bitlyGetUsername();
 	    }
 	  }, {
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      $('.card-text').append(this.props.event.eventbrite.description.html);
+	      $('.card-text').append(this.props.event.eventbrite.description.html); // OK
 	    }
 	  }, {
 	    key: 'componentWillUpdate',
 	    value: function componentWillUpdate(nextProps, nextState) {
+	
+	      /*
+	        Is this required? Or will the user trigger this interaction when they subscribe to be a promoter?
+	        I might need to create a new function that updates the state - then that should trigger a re-render
+	        */
+	
 	      this.bitlyLinkClicks(nextState.shortenedUrl);
 	    }
 	  }, {
@@ -52209,9 +52385,7 @@
 	                  { className: 'btn btn-lg waves-effect waves-light', style: { "backgroundColor": "#ff5a00" } },
 	                  'Promote with ',
 	                  _react2.default.createElement('img', { src: 'img/BitlyLogo.png', className: 'img-responsive img-fluid', style: { "width": "60px", "display": "inline" } })
-	                ),
-	                _react2.default.createElement('hr', null),
-	                _react2.default.createElement('input', { className: 'inputId', value: this.state.shortenedUrl })
+	                )
 	              ),
 	              _react2.default.createElement(
 	                'div',
@@ -52420,6 +52594,9 @@
 	    value: function bitlyShortenLink(currenturl) {
 	      var _this2 = this;
 	
+	      // send in username, and append to the url to produce unique bitlinks
+	      // this function will be triggered by the user interaction - signup to promote this event
+	
 	      var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
 	
 	      $.ajax({
@@ -52439,6 +52616,8 @@
 	    value: function bitlyLinkClicks(linkclicksurl) {
 	      var _this3 = this;
 	
+	      // required to get link counts for each promoter's link; will be displayed in leaderboard
+	
 	      var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
 	
 	      $.ajax({
@@ -52453,25 +52632,25 @@
 	        }
 	      });
 	    }
-	  }, {
-	    key: 'bitlyGetUsername',
-	    value: function bitlyGetUsername() {
-	      var _this4 = this;
 	
-	      var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
+	    // not sure why this was included
 	
-	      $.ajax({
-	        url: "https://api-ssl.bitly.com/v3/user/info?access_token=" + ACCESS_TOKEN,
-	        type: 'GET',
+	    // bitlyGetUsername() {
+	    //   var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
 	
-	        success: function success(data) {
-	          _this4.setState({ username: data.data.full_name });
-	        },
-	        error: function error(data) {
-	          console.error('Failed to get bitly username. Error: ', data);
-	        }
-	      });
-	    }
+	    //   $.ajax({
+	    //     url: "https://api-ssl.bitly.com/v3/user/info?access_token=" + ACCESS_TOKEN,
+	    //     type: 'GET',
+	
+	    //     success: (data) => {
+	    //       this.setState({username: data.data.full_name});
+	    //     },
+	    //     error: (data) => {
+	    //       console.error('Failed to get bitly username. Error: ', data);
+	    //     }
+	    //   });
+	    // }
+	
 	  }]);
 	
 	  return EventDetails;
@@ -52590,7 +52769,7 @@
 	      var _this2 = this;
 	
 	      $.ajax({
-	        url: '/userEvents',
+	        url: '/user/' + localStorage.username + '/events',
 	        dataType: 'json',
 	        type: 'GET',
 	        success: function success(data) {
@@ -53043,6 +53222,9 @@
 	        success: function (events) {
 	          var _this3 = this;
 	
+	          events = events.filter(function (event) {
+	            return event.eventbrite;
+	          });
 	          events.map(function (event) {
 	            if (event.eventbrite.category_id === _this3.props.category.categoryId) {
 	              linkedEvents.push(event);
@@ -53634,9 +53816,9 @@
 
 /***/ },
 /* 558 */
-/*!*****************************************!*\
-  !*** ./src/client/components/NavBar.js ***!
-  \*****************************************/
+/*!*****************************************************************!*\
+  !*** ./src/client/components/promoterDashboard/promoterMain.js ***!
+  \*****************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -53651,9 +53833,13 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactRouter = __webpack_require__(/*! react-router */ 469);
+	var _reactTapEventPlugin = __webpack_require__(/*! react-tap-event-plugin */ 559);
 	
-	var _reactStormpath = __webpack_require__(/*! react-stormpath */ 535);
+	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
+	
+	var _promoterLeft = __webpack_require__(/*! ./promoterLeft */ 565);
+	
+	var _promoterLeft2 = _interopRequireDefault(_promoterLeft);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -53663,137 +53849,497 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var NavBar = function (_React$Component) {
-	  _inherits(NavBar, _React$Component);
+	var Promoters = function (_React$Component) {
+	  _inherits(Promoters, _React$Component);
 	
-	  function NavBar() {
-	    _classCallCheck(this, NavBar);
+	  function Promoters(props) {
+	    _classCallCheck(this, Promoters);
 	
-	    return _possibleConstructorReturn(this, (NavBar.__proto__ || Object.getPrototypeOf(NavBar)).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, (Promoters.__proto__ || Object.getPrototypeOf(Promoters)).call(this, props));
+	
+	    _this.state = {
+	      firstName: '',
+	      lastName: '',
+	      photo: '',
+	      eventsPromoting: []
+	    };
+	    _this.componentDidMount = _this.componentDidMount.bind(_this);
+	    return _this;
 	  }
 	
-	  _createClass(NavBar, [{
+	  _createClass(Promoters, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      var user = localStorage.getItem('username');
+	      var url = '/user/' + user;
+	
+	      this.serverRequest = $.get(url, function (promoter) {
+	        this.setState({
+	          firstName: promoter.firstName,
+	          lastName: promoter.lastName,
+	          photo: promoter.photo,
+	          eventsPromoting: promoter.eventsPromoting
+	        });
+	      }.bind(this));
+	    }
+	  }, {
+	    key: 'componentWillUnmount',
+	    value: function componentWillUnmount() {
+	      this.serverRequest.abort();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(_promoterLeft2.default, { data: this.state });
+	    }
+	  }]);
+	
+	  return Promoters;
+	}(_react2.default.Component);
+	
+	exports.default = Promoters;
+
+/***/ },
+/* 559 */
+/*!**************************************************************!*\
+  !*** ./~/react-tap-event-plugin/src/injectTapEventPlugin.js ***!
+  \**************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(/*! fbjs/lib/invariant */ 560);
+	var defaultClickRejectionStrategy = __webpack_require__(/*! ./defaultClickRejectionStrategy */ 561);
+	
+	var alreadyInjected = false;
+	
+	module.exports = function injectTapEventPlugin (strategyOverrides) {
+	  strategyOverrides = strategyOverrides || {}
+	  var shouldRejectClick = strategyOverrides.shouldRejectClick || defaultClickRejectionStrategy;
+	
+	  if (process.env.NODE_ENV !== 'production') {
+	    invariant(
+	      !alreadyInjected,
+	      'injectTapEventPlugin(): Can only be called once per application lifecycle.\n\n\
+	It is recommended to call injectTapEventPlugin() just before you call \
+	ReactDOM.render(). If you are using an external library which calls injectTapEventPlugin() \
+	itself, please contact the maintainer as it shouldn\'t be called in library code and \
+	should be injected by the application.'
+	    )
+	  }
+	
+	  alreadyInjected = true;
+	
+	  __webpack_require__(/*! react/lib/EventPluginHub */ 340).injection.injectEventPluginsByName({
+	    'TapEventPlugin':       __webpack_require__(/*! ./TapEventPlugin.js */ 562)(shouldRejectClick)
+	  });
+	};
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 294)))
+
+/***/ },
+/* 560 */
+/*!**********************************************************!*\
+  !*** ./~/react-tap-event-plugin/~/fbjs/lib/invariant.js ***!
+  \**********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule invariant
+	 */
+	
+	"use strict";
+	
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+	
+	var invariant = function (condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+	
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error('Minified exception occurred; use the non-minified dev environment ' + 'for the full error message and additional helpful warnings.');
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
+	        return args[argIndex++];
+	      }));
+	    }
+	
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+	
+	module.exports = invariant;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(/*! (webpack)/~/node-libs-browser/~/process/browser.js */ 294)))
+
+/***/ },
+/* 561 */
+/*!***********************************************************************!*\
+  !*** ./~/react-tap-event-plugin/src/defaultClickRejectionStrategy.js ***!
+  \***********************************************************************/
+/***/ function(module, exports) {
+
+	module.exports = function(lastTouchEvent, clickTimestamp) {
+	  if (lastTouchEvent && (clickTimestamp - lastTouchEvent) < 750) {
+	    return true;
+	  }
+	};
+
+
+/***/ },
+/* 562 */
+/*!********************************************************!*\
+  !*** ./~/react-tap-event-plugin/src/TapEventPlugin.js ***!
+  \********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule TapEventPlugin
+	 * @typechecks static-only
+	 */
+	
+	"use strict";
+	
+	var EventConstants = __webpack_require__(/*! react/lib/EventConstants */ 338);
+	var EventPluginUtils = __webpack_require__(/*! react/lib/EventPluginUtils */ 342);
+	var EventPropagators = __webpack_require__(/*! react/lib/EventPropagators */ 339);
+	var SyntheticUIEvent = __webpack_require__(/*! react/lib/SyntheticUIEvent */ 373);
+	var TouchEventUtils = __webpack_require__(/*! ./TouchEventUtils */ 563);
+	var ViewportMetrics = __webpack_require__(/*! react/lib/ViewportMetrics */ 374);
+	
+	var keyOf = __webpack_require__(/*! fbjs/lib/keyOf */ 564);
+	var topLevelTypes = EventConstants.topLevelTypes;
+	
+	var isStartish = EventPluginUtils.isStartish;
+	var isEndish = EventPluginUtils.isEndish;
+	
+	var isTouch = function(topLevelType) {
+	  var touchTypes = [
+	    topLevelTypes.topTouchCancel,
+	    topLevelTypes.topTouchEnd,
+	    topLevelTypes.topTouchStart,
+	    topLevelTypes.topTouchMove
+	  ];
+	  return touchTypes.indexOf(topLevelType) >= 0;
+	}
+	
+	/**
+	 * Number of pixels that are tolerated in between a `touchStart` and `touchEnd`
+	 * in order to still be considered a 'tap' event.
+	 */
+	var tapMoveThreshold = 10;
+	var ignoreMouseThreshold = 750;
+	var startCoords = {x: null, y: null};
+	var lastTouchEvent = null;
+	
+	var Axis = {
+	  x: {page: 'pageX', client: 'clientX', envScroll: 'currentPageScrollLeft'},
+	  y: {page: 'pageY', client: 'clientY', envScroll: 'currentPageScrollTop'}
+	};
+	
+	function getAxisCoordOfEvent(axis, nativeEvent) {
+	  var singleTouch = TouchEventUtils.extractSingleTouch(nativeEvent);
+	  if (singleTouch) {
+	    return singleTouch[axis.page];
+	  }
+	  return axis.page in nativeEvent ?
+	    nativeEvent[axis.page] :
+	    nativeEvent[axis.client] + ViewportMetrics[axis.envScroll];
+	}
+	
+	function getDistance(coords, nativeEvent) {
+	  var pageX = getAxisCoordOfEvent(Axis.x, nativeEvent);
+	  var pageY = getAxisCoordOfEvent(Axis.y, nativeEvent);
+	  return Math.pow(
+	    Math.pow(pageX - coords.x, 2) + Math.pow(pageY - coords.y, 2),
+	    0.5
+	  );
+	}
+	
+	var touchEvents = [
+	  topLevelTypes.topTouchStart,
+	  topLevelTypes.topTouchCancel,
+	  topLevelTypes.topTouchEnd,
+	  topLevelTypes.topTouchMove,
+	];
+	
+	var dependencies = [
+	  topLevelTypes.topMouseDown,
+	  topLevelTypes.topMouseMove,
+	  topLevelTypes.topMouseUp,
+	].concat(touchEvents);
+	
+	var eventTypes = {
+	  touchTap: {
+	    phasedRegistrationNames: {
+	      bubbled: keyOf({onTouchTap: null}),
+	      captured: keyOf({onTouchTapCapture: null})
+	    },
+	    dependencies: dependencies
+	  }
+	};
+	
+	var now = (function() {
+	  if (Date.now) {
+	    return Date.now;
+	  } else {
+	    // IE8 support: http://stackoverflow.com/questions/9430357/please-explain-why-and-how-new-date-works-as-workaround-for-date-now-in
+	    return function () {
+	      return +new Date;
+	    }
+	  }
+	})();
+	
+	function createTapEventPlugin(shouldRejectClick) {
+	  return {
+	
+	    tapMoveThreshold: tapMoveThreshold,
+	
+	    ignoreMouseThreshold: ignoreMouseThreshold,
+	
+	    eventTypes: eventTypes,
+	
+	    /**
+	     * @param {string} topLevelType Record from `EventConstants`.
+	     * @param {DOMEventTarget} targetInst The listening component root node.
+	     * @param {object} nativeEvent Native browser event.
+	     * @return {*} An accumulation of synthetic events.
+	     * @see {EventPluginHub.extractEvents}
+	     */
+	    extractEvents: function(
+	      topLevelType,
+	      targetInst,
+	      nativeEvent,
+	      nativeEventTarget
+	    ) {
+	
+	      if (isTouch(topLevelType)) {
+	        lastTouchEvent = now();
+	      } else {
+	        if (shouldRejectClick(lastTouchEvent, now())) {
+	          return null;
+	        }
+	      }
+	
+	      if (!isStartish(topLevelType) && !isEndish(topLevelType)) {
+	        return null;
+	      }
+	      var event = null;
+	      var distance = getDistance(startCoords, nativeEvent);
+	      if (isEndish(topLevelType) && distance < tapMoveThreshold) {
+	        event = SyntheticUIEvent.getPooled(
+	          eventTypes.touchTap,
+	          targetInst,
+	          nativeEvent,
+	          nativeEventTarget
+	        );
+	      }
+	      if (isStartish(topLevelType)) {
+	        startCoords.x = getAxisCoordOfEvent(Axis.x, nativeEvent);
+	        startCoords.y = getAxisCoordOfEvent(Axis.y, nativeEvent);
+	      } else if (isEndish(topLevelType)) {
+	        startCoords.x = 0;
+	        startCoords.y = 0;
+	      }
+	      EventPropagators.accumulateTwoPhaseDispatches(event);
+	      return event;
+	    }
+	
+	  };
+	}
+	
+	module.exports = createTapEventPlugin;
+
+
+/***/ },
+/* 563 */
+/*!*********************************************************!*\
+  !*** ./~/react-tap-event-plugin/src/TouchEventUtils.js ***!
+  \*********************************************************/
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule TouchEventUtils
+	 */
+	
+	var TouchEventUtils = {
+	  /**
+	   * Utility function for common case of extracting out the primary touch from a
+	   * touch event.
+	   * - `touchEnd` events usually do not have the `touches` property.
+	   *   http://stackoverflow.com/questions/3666929/
+	   *   mobile-sarai-touchend-event-not-firing-when-last-touch-is-removed
+	   *
+	   * @param {Event} nativeEvent Native event that may or may not be a touch.
+	   * @return {TouchesObject?} an object with pageX and pageY or null.
+	   */
+	  extractSingleTouch: function(nativeEvent) {
+	    var touches = nativeEvent.touches;
+	    var changedTouches = nativeEvent.changedTouches;
+	    var hasTouches = touches && touches.length > 0;
+	    var hasChangedTouches = changedTouches && changedTouches.length > 0;
+	
+	    return !hasTouches && hasChangedTouches ? changedTouches[0] :
+	           hasTouches ? touches[0] :
+	           nativeEvent;
+	  }
+	};
+	
+	module.exports = TouchEventUtils;
+
+
+/***/ },
+/* 564 */
+/*!******************************************************!*\
+  !*** ./~/react-tap-event-plugin/~/fbjs/lib/keyOf.js ***!
+  \******************************************************/
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule keyOf
+	 */
+	
+	/**
+	 * Allows extraction of a minified key. Let's the build system minify keys
+	 * without losing the ability to dynamically use key strings as values
+	 * themselves. Pass in an object with a single key/val pair and it will return
+	 * you the string key of that single record. Suppose you want to grab the
+	 * value for a key 'className' inside of an object. Key/val minification may
+	 * have aliased that key to be 'xa12'. keyOf({className: null}) will return
+	 * 'xa12' in that case. Resolve keys you want to use once at startup time, then
+	 * reuse those resolutions.
+	 */
+	"use strict";
+	
+	var keyOf = function (oneKeyObj) {
+	  var key;
+	  for (key in oneKeyObj) {
+	    if (!oneKeyObj.hasOwnProperty(key)) {
+	      continue;
+	    }
+	    return key;
+	  }
+	  return null;
+	};
+	
+	module.exports = keyOf;
+
+/***/ },
+/* 565 */
+/*!*****************************************************************!*\
+  !*** ./src/client/components/promoterDashboard/promoterLeft.js ***!
+  \*****************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 299);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var PromoterLeft = function (_React$Component) {
+	  _inherits(PromoterLeft, _React$Component);
+	
+	  function PromoterLeft(props) {
+	    _classCallCheck(this, PromoterLeft);
+	
+	    return _possibleConstructorReturn(this, (PromoterLeft.__proto__ || Object.getPrototypeOf(PromoterLeft)).call(this, props));
+	  }
+	
+	  _createClass(PromoterLeft, [{
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
-	        { className: 'nav-bar' },
+	        null,
+	        console.log(this.props.data),
 	        _react2.default.createElement(
-	          'nav',
-	          { className: 'navbar navbar-dark navbar-fixed-top scrolling-navbar navbar-flat' },
-	          _react2.default.createElement(
-	            'button',
-	            { className: 'navbar-toggler hidden-sm-up', type: 'button', 'data-toggle': 'collapse', 'data-target': '#collapseEx' },
-	            _react2.default.createElement('i', { className: 'fa fa-bars' })
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            { className: 'wide' },
-	            _react2.default.createElement(
-	              'div',
-	              { className: 'collapse navbar-toggleable-xs', id: 'collapseEx' },
-	              _react2.default.createElement(
-	                'a',
-	                { className: 'navbar-brand', href: '#', target: '_blank' },
-	                _react2.default.createElement('img', { src: 'img/Logo.svg', style: { "width": "50px" } })
-	              ),
-	              _react2.default.createElement(
-	                'ul',
-	                { className: 'nav navbar-nav pull-right', style: { "marginTop": "3px" } },
-	                _react2.default.createElement(
-	                  'li',
-	                  { className: 'nav-item' },
-	                  _react2.default.createElement(
-	                    'button',
-	                    { className: 'btn-flat waves-effect waves-light btn-light' },
-	                    _react2.default.createElement(
-	                      _reactRouter.Link,
-	                      { to: '/' },
-	                      'Home'
-	                    )
-	                  )
-	                ),
-	                _react2.default.createElement(
-	                  _reactStormpath.Authenticated,
-	                  null,
-	                  _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
-	                    _react2.default.createElement(
-	                      'button',
-	                      { className: 'btn-flat waves-effect waves-light btn-light' },
-	                      _react2.default.createElement(
-	                        'a',
-	                        { href: '/profile' },
-	                        ' Profile '
-	                      )
-	                    )
-	                  ),
-	                  _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
-	                    _react2.default.createElement(
-	                      'button',
-	                      { className: 'btn-flat waves-effect waves-light btn-light' },
-	                      _react2.default.createElement(
-	                        _reactRouter.Link,
-	                        { to: '/create' },
-	                        'Create Event'
-	                      )
-	                    )
-	                  ),
-	                  _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
-	                    _react2.default.createElement(
-	                      'button',
-	                      { className: 'btn-flat waves-effect waves-light btn-light' },
-	                      _react2.default.createElement(_reactStormpath.LogoutLink, null)
-	                    )
-	                  )
-	                ),
-	                _react2.default.createElement(
-	                  _reactStormpath.NotAuthenticated,
-	                  null,
-	                  _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
-	                    _react2.default.createElement(
-	                      'button',
-	                      { className: 'btn-flat waves-effect waves-light btn-light' },
-	                      _react2.default.createElement(
-	                        'a',
-	                        { href: '/clientlogin' },
-	                        ' Sign In '
-	                      )
-	                    )
-	                  ),
-	                  _react2.default.createElement(
-	                    'li',
-	                    { className: 'nav-item' },
-	                    _react2.default.createElement(
-	                      'button',
-	                      { className: 'btn-flat waves-effect waves-light btn-light' },
-	                      _react2.default.createElement(
-	                        'a',
-	                        { href: '/register' },
-	                        ' Sign Up '
-	                      )
-	                    )
-	                  )
-	                )
-	              )
-	            )
-	          )
+	          'h2',
+	          null,
+	          ' ',
+	          this.props.data.firstName,
+	          ' ',
+	          this.props.data.lastName,
+	          ' '
 	        )
 	      );
 	    }
 	  }]);
 	
-	  return NavBar;
+	  return PromoterLeft;
 	}(_react2.default.Component);
 	
-	exports.default = NavBar;
+	exports.default = PromoterLeft;
 
 /***/ }
 /******/ ]);

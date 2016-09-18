@@ -8,6 +8,7 @@ import PartyParrot from './components/PartyParrot';
 import { Route, IndexRoute } from 'react-router';
 import ReactStormpath, { LogoutRoute, Router, AuthenticatedRoute, LoginLink } from 'react-stormpath';
 import LoginPage from './components/authentication/Login';
+import Promoters from './components/promoterDashboard/promoterMain'
 
 export default (
   <Route path="/" component={App}>
@@ -19,6 +20,7 @@ export default (
       <Route path ="/eventDetails" component={EventDetails} />
       <Route path ="/profile" component={UserDetails} />
       <Route path ="/partyMode" component={PartyParrot} />
+      <Route path ="/promoter" component={Promoters} />
     </AuthenticatedRoute>
   </Route>
 );
