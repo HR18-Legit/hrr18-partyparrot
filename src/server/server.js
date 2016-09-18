@@ -16,7 +16,7 @@ var client = new Eventbrite(config.clientKey, config.clientSecret);
 var Event = require('./models/event');
 var User  = require('./models/users');
 
-//============ controllers ================
+//============ controllers ===============
 var UserController = require('./controllers/userController.js');
 
 
