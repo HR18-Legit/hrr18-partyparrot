@@ -36709,7 +36709,6 @@
 	    _react2.default.createElement(_reactRouter.Route, { path: '/create', component: _CreateEvent2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/eventDetails', component: _EventDetails2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/profile', component: _UserDetails2.default }),
-	    _react2.default.createElement(_reactRouter.Route, { path: '/partyMode', component: _PartyParrot2.default }),
 	    _react2.default.createElement(_reactRouter.Route, { path: '/promoter', component: _promoterMain2.default })
 	  )
 	);
@@ -50221,6 +50220,7 @@
 	                  { className: 'btn btn-lg btn-default waves-effect waves-light', onClick: function onClick() {
 	                      return _this2.handleSubmit({
 	                        userEmail: localStorage.username,
+	                        name: _this2.state.selectedEvent.name.html,
 	                        gPoint: _this2.gPoint.value,
 	                        gReward: _this2.gReward.value,
 	                        sPoint: _this2.sPoint.value,
@@ -50237,6 +50237,9 @@
 	          )
 	        );
 	      } else {
+	
+	        {/* what is happening here I have no idea */}
+	
 	        return _react2.default.createElement(
 	          'div',
 	          null,
@@ -50275,6 +50278,9 @@
 	        success: function success(data) {
 	          _this3.setState({ data: data });
 	          _this3.setState({ submitted: "submitted" });
+	
+	          // don't understand what is happening once the event has been created.
+	          // shouldn't this redirect us to the event details page?
 	        },
 	        error: function error(xhr, status, err) {
 	          _this3.clearForm();
@@ -52294,36 +52300,42 @@
 	var EventDetails = function (_React$Component) {
 	  _inherits(EventDetails, _React$Component);
 	
-	  function EventDetails() {
+	  function EventDetails(props) {
 	    _classCallCheck(this, EventDetails);
 	
-	    /*
-	      this.state = {
-	      promoters: {} // username:bitlink --> then retrieve link click counts (no need to save in state)
-	    }
-	      */
+	    var _this = _possibleConstructorReturn(this, (EventDetails.__proto__ || Object.getPrototypeOf(EventDetails)).call(this, props));
 	
-	    var _this = _possibleConstructorReturn(this, (EventDetails.__proto__ || Object.getPrototypeOf(EventDetails)).call(this));
+	    _this.promotersUpdated = false;
 	
 	    _this.state = {
-	      shortenedUrl: 'Promotion URL',
-	      linkclickscount: 0,
-	      username: 'username'
+	      id: props.event.eventbrite.id,
+	      shortenedUrl: 'subscribe above to generate a link!',
+	      promoters: []
 	    };
+	
 	    return _this;
 	  }
 	
 	  _createClass(EventDetails, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
+	      var _this2 = this;
 	
-	      /*
-	        Trigger an API request to GET all users who have subscribed to be promoters for this event,
-	      then populate the leaderboard with their usernames and associated bitly links
-	        */
-	
-	      this.bitlyShortenLink(this.props.event.eventbrite.url); // remove in favor of the above
-	      //this.bitlyGetUsername();
+	      console.log(this.state.id);
+	      $.ajax({
+	        url: '/events/' + this.props.id + '/promoters',
+	        contentType: 'application/json',
+	        type: 'GET',
+	        success: function success(data) {
+	          console.log(data);
+	          _this2.setState({
+	            promoters: data
+	          });
+	        },
+	        error: function error(err, data) {
+	          console.error(err.toString());
+	        }
+	      });
 	    }
 	  }, {
 	    key: 'componentDidMount',
@@ -52333,17 +52345,38 @@
 	  }, {
 	    key: 'componentWillUpdate',
 	    value: function componentWillUpdate(nextProps, nextState) {
+	      // update the event if promoters have signed up
+	      // add this event to the new promoter's list of owned events
+	      if (this.promotersUpdated) {
 	
-	      /*
-	        Is this required? Or will the user trigger this interaction when they subscribe to be a promoter?
-	        I might need to create a new function that updates the state - then that should trigger a re-render
-	        */
+	        $.ajax({
+	          url: '/add/promoter',
+	          contentType: 'application/json',
+	          type: 'POST',
+	          data: JSON.stringify({
+	            userEmail: localStorage.username,
+	            eventId: this.props.id,
+	            bitlyLink: this.state.shortenedUrl
+	          }),
+	          success: function success(conf) {
+	            console.log(conf);
+	          },
+	          error: function error(err) {
+	            console.log(err);
+	          }
+	        });
 	
-	      this.bitlyLinkClicks(nextState.shortenedUrl);
+	        this.promotersUpdated = false;
+	      }
+	
+	      // trigger a re-count of all links whenever the component updates
+	      // this.bitlyLinkClicks(nextState.shortenedUrl);
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this3 = this;
+	
 	      $('.modal-backdrop').remove(); // Quickfix to remove the modal
 	      return _react2.default.createElement(
 	        'div',
@@ -52382,10 +52415,18 @@
 	                _react2.default.createElement('hr', null),
 	                _react2.default.createElement(
 	                  'button',
-	                  { className: 'btn btn-lg waves-effect waves-light', style: { "backgroundColor": "#ff5a00" } },
+	                  { className: 'btn btn-lg waves-effect waves-light',
+	                    style: { "backgroundColor": "#ff5a00" },
+	                    onClick: function onClick() {
+	                      _this3.signupToPromote();
+	                    } },
 	                  'Promote with ',
-	                  _react2.default.createElement('img', { src: 'img/BitlyLogo.png', className: 'img-responsive img-fluid', style: { "width": "60px", "display": "inline" } })
-	                )
+	                  _react2.default.createElement('img', { src: 'img/BitlyLogo.png',
+	                    className: 'img-responsive img-fluid',
+	                    style: { "width": "60px", "display": "inline" } })
+	                ),
+	                _react2.default.createElement('hr', null),
+	                _react2.default.createElement('input', { className: 'inputId', value: this.state.shortenedUrl })
 	              ),
 	              _react2.default.createElement(
 	                'div',
@@ -52590,67 +52631,66 @@
 	      );
 	    }
 	  }, {
+	    key: 'signupToPromote',
+	    value: function signupToPromote() {
+	      var url = this.props.event.eventbrite.url + '#' + localStorage.username;
+	      this.bitlyShortenLink(url);
+	    }
+	  }, {
 	    key: 'bitlyShortenLink',
-	    value: function bitlyShortenLink(currenturl) {
-	      var _this2 = this;
+	    value: function bitlyShortenLink(url) {
+	      var _this4 = this;
 	
-	      // send in username, and append to the url to produce unique bitlinks
-	      // this function will be triggered by the user interaction - signup to promote this event
+	      var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
+	      var promoters = this.state.promoters;
 	
-	      var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
+	      if (!promoters.filter(function (record) {
+	        return record.username === localStorage.username;
+	      }).length) {
 	
-	      $.ajax({
-	        url: "https://api-ssl.bitly.com/v3/shorten?access_token=" + ACCESS_TOKEN + "&longUrl=" + currenturl + "&format=txt",
-	        type: 'GET',
-	        success: function success(data) {
-	          _this2.setState({ shortenedUrl: data });
-	          console.log('data bitlyShortenLink ', data);
-	        },
-	        error: function error(data) {
-	          console.error('Failed to get shortened URL. Error: ', data);
-	        }
-	      });
+	        $.ajax({
+	          url: "https://api-ssl.bitly.com/v3/shorten?access_token=" + ACCESS_TOKEN + "&longUrl=" + url + "&format=txt",
+	          type: 'GET',
+	          success: function success(data) {
+	            console.log(data);
+	            promoters.push({
+	              username: localStorage.username,
+	              url: data.data.url
+	            });
+	            _this4.promotersUpdated = true;
+	            _this4.setState({
+	              promoters: promoters,
+	              shortenedUrl: data.data.url
+	            });
+	            console.log(_this4.state);
+	          },
+	          error: function error(data) {
+	            console.error('Failed to get shortened URL. Error: ', data);
+	          }
+	        });
+	      }
 	    }
 	  }, {
 	    key: 'bitlyLinkClicks',
 	    value: function bitlyLinkClicks(linkclicksurl) {
-	      var _this3 = this;
+	      var _this5 = this;
 	
 	      // required to get link counts for each promoter's link; will be displayed in leaderboard
 	
-	      var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
+	      var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
 	
 	      $.ajax({
 	        url: "https://api-ssl.bitly.com/v3/link/clicks?access_token=" + ACCESS_TOKEN + "&link=" + linkclicksurl,
 	        type: 'GET',
 	
 	        success: function success(data) {
-	          _this3.setState({ linkclickscount: data.data.link_clicks });
+	          _this5.setState({ linkclickscount: data.data.link_clicks });
 	        },
 	        error: function error(data) {
 	          console.error('Failed to get link clicks. Error: ', data);
 	        }
 	      });
 	    }
-	
-	    // not sure why this was included
-	
-	    // bitlyGetUsername() {
-	    //   var ACCESS_TOKEN = "33edd09b64804a5a8f80eacf8e7ff583ae0b0b35";
-	
-	    //   $.ajax({
-	    //     url: "https://api-ssl.bitly.com/v3/user/info?access_token=" + ACCESS_TOKEN,
-	    //     type: 'GET',
-	
-	    //     success: (data) => {
-	    //       this.setState({username: data.data.full_name});
-	    //     },
-	    //     error: (data) => {
-	    //       console.error('Failed to get bitly username. Error: ', data);
-	    //     }
-	    //   });
-	    // }
-	
 	  }]);
 	
 	  return EventDetails;
@@ -53110,18 +53150,18 @@
 	  function Category() {
 	    _classCallCheck(this, Category);
 	
-	    var _this = _possibleConstructorReturn(this, (Category.__proto__ || Object.getPrototypeOf(Category)).call(this));
+	    var _this2 = _possibleConstructorReturn(this, (Category.__proto__ || Object.getPrototypeOf(Category)).call(this));
 	
-	    _this.state = {
+	    _this2.state = {
 	      events: []
 	    };
-	    return _this;
+	    return _this2;
 	  }
 	
 	  _createClass(Category, [{
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      return _react2.default.createElement(
 	        'div',
@@ -53181,7 +53221,7 @@
 	                    return _react2.default.createElement(
 	                      'li',
 	                      { onClick: function onClick() {
-	                          return _this2.props.handler(event);
+	                          return _this3.props.handler(event);
 	                        }, style: { "marginTop": "5px" } },
 	                      _react2.default.createElement('img', { src: event.eventbrite.logo ? event.eventbrite.logo.url : "http://130.211.52.161/tradeo-content/themes/nucleare-pro/images/no-image-box.png", style: { "width": "100px", 'marginRight': '10px', "borderRadius": '5px' }, alt: '' }),
 	                      _react2.default.createElement(
@@ -53215,20 +53255,13 @@
 	  }, {
 	    key: 'getEvents',
 	    value: function getEvents() {
-	      var linkedEvents = [];
+	      var _this = this;
 	      $.ajax({
 	        url: '/events',
 	        type: 'GET',
 	        success: function (events) {
-	          var _this3 = this;
-	
-	          events = events.filter(function (event) {
-	            return event.eventbrite;
-	          });
-	          events.map(function (event) {
-	            if (event.eventbrite.category_id === _this3.props.category.categoryId) {
-	              linkedEvents.push(event);
-	            }
+	          var linkedEvents = events.filter(function (event) {
+	            return event.eventbrite && event.eventbrite.category_id === _this.props.category.categoryId;
 	          });
 	          this.setState({
 	            events: linkedEvents
