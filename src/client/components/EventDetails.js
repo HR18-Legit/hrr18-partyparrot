@@ -8,7 +8,7 @@ export default class EventDetails extends React.Component {
     this.promotersUpdated = false;
 
     this.state = {
-      id: props.event.eventbrite.id,
+      id: props.event._id,
       shortenedUrl: '',
       promoters: []
     }
@@ -18,8 +18,10 @@ export default class EventDetails extends React.Component {
   componentWillMount() {
 
     console.log(this.state.id);
+    var id = this.state.id;
+
     $.ajax({
-      url: `/events/${this.props.id}/promoters`,
+      url: `/events/${id}/promoters`,
       contentType: 'application/json',
       type: 'GET',
       success: (data) => {
@@ -50,8 +52,8 @@ export default class EventDetails extends React.Component {
         type: 'POST',
         data: JSON.stringify({
           userEmail: localStorage.username,
-          eventId: this.props.id,
-          bitlyLink: this.state.shortenedUrl
+          eventId: this.state.id,
+          bitlyLink: nextState.shortenedUrl
         }),
         success: (conf) => {
           console.log(conf);
@@ -85,6 +87,7 @@ export default class EventDetails extends React.Component {
             <div className="col-md-7">
               <div className="card card-block">
                 <h4 className="card-title">Start Promoting Now!</h4>
+
                 <hr />
 
                 <button className="btn btn-lg waves-effect waves-light"
@@ -95,17 +98,12 @@ export default class EventDetails extends React.Component {
                                           style={{"width":"60px", "display":"inline"}} />
                 </button>
 
+                <input className="inputId" placeholder='subscribe above to generate a link!' value={this.state.shortenedUrl}/>
+
                 <hr />
 
-                <input className="inputId" value={this.state.shortenedUrl} />
-
-                <textarea className="inputId" value={this.state.shortenedUrl} />
-
                 <TakeMoney />
-                <button className="btn btn-lg waves-effect waves-light" style={{"backgroundColor":"#ff5a00"}}>Promote with <img src="img/BitlyLogo.png" className="img-responsive img-fluid" style={{"width":"60px", "display":"inline"}} /></button>
 
-
-                <input className="inputId" placeholder='subscribe above to generate a link!' value={this.state.shortenedUrl}/>
               </div>
               <div className="card card-block">
                 <h4 className="card-title">Decription</h4>
@@ -166,7 +164,7 @@ export default class EventDetails extends React.Component {
                     <tbody>
                       {this.state.promoters.map(promoter =>
 
-                        <tr>
+                        <tr key={promoter.url}>
                           <td>{promoter.username}</td>
                           <td>{promoter.points}</td>
                         </tr>
@@ -220,13 +218,13 @@ export default class EventDetails extends React.Component {
           console.log(data);
           promoters.push({
             username: localStorage.username,
-            url: data.data.url
+            url: data.data.url,
+            points: 0
           });
           this.promotersUpdated = true;
           this.setState({
             promoters: promoters,
-            shortenedUrl: data.data.url,
-            points: '0'
+            shortenedUrl: data.data.url
           });
           console.log(this.state);
         },
