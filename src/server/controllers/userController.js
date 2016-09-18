@@ -11,6 +11,7 @@ var findUsers = Q.nbind(User.find, User);
 
 module.exports = {
     getUser: function(req, res){
+        var event = {};
         console.log(req.params.email)
         findUser({"email": req.params.email})
             .then(function(user){
@@ -24,35 +25,62 @@ module.exports = {
     addPromoter: function(req, res){
 
         findUser({"email": req.body.userEmail})
-            .then(function(user){
-                console.log("USER", user);
+            .then(function(user) {
                 user.eventsPromoting.push({
                     "userEmail": req.body.userEmail,
+                    "ownerEmail": req.body.ownerEmail,
+                    "ownerName": req.body.ownerName,
                     "eventId": req.body.eventId,
                     "bitlyLink": req.body.bitlyLink
                 });
 
-                user.save(function(err){
-                    if(err) res.json(404, {error: err});
-                    res.json({message: 'Promoter registered'});
-                })
+                user.save(function(err) {
+                    if(err) res.json( 404, {error: err} );
+                    res.json( {message: 'Promoter registered'} );
+                });
             })
-            .catch(function(error){
-                res.json(404, {error: err});
+            .catch(function(error) {
+                res.json( 404, {error: err} ) ;
             })
         
     },
 
-    getPromoters: function(req, res){
-        console.log(req.params.id)
+    getAllEvents: function (req, res, next) {
+        User.find({}, function(err, users) {
+            if (err) { console.error(err) }
+            var events = [];
+            users.forEach(function(user){
+            events = events.concat(user.events);
+        });
+            res.json(events);
+        });
+    },
+
+    getEvent: function(req, res){
+        findUsers()
+            .then(function(users){
+                var result = []; 
+                users.forEach(function(user){
+                    user.events.forEach(function(event){
+                        if(event._id == req.params.id){
+                            result.push(event);
+                        }
+                    })
+                });
+                res.json(result);
+            })
+            .catch(function(err){
+                res.json({error: err});
+            })
+    },
+
+    getPromoters: function(req, res) {
         findUsers()
             .then(function(users){
                 var results = []; 
 
-                users.forEach(function(user){
-                    console.log("USER", user);
-                    user.eventsPromoting.forEach(function(eventPromoting){
-                        console.log("EVENT", eventPromoting)
+                users.forEach(function(user) {
+                    user.eventsPromoting.forEach(function(eventPromoting) {
                         if(eventPromoting.eventId === req.params.id){
                             results.push(eventPromoting);
                         }
@@ -66,13 +94,13 @@ module.exports = {
             })
     },
 
-    addEvent: function(req,res){
-        console.log(req.body.userEmail);
-        findUser({"email": req.body.userEmail})
+    addEvent: function(req,res) {
+        findUser( {"email": req.body.userEmail} )
             .then(function(user){
                 user.events.push({
                     "name": req.body.name,
                     "desc": req.body.desc,
+                    "userEmail": req.body.userEmail,
                     "gPoint": req.body.gPoint,
                     "gReward": req.body.gReward,
                     "sPoint": req.body.sPoint,
@@ -94,8 +122,7 @@ module.exports = {
     },
 
     getUserEvents: function(req,res) {
-        console.log(req.params.id)
-        findUser({"email": req.params.email}) 
+        findUser( {"email": req.params.email} ) 
             .then(function(user){
                 console.log(user);
                 res.json(user.events);
