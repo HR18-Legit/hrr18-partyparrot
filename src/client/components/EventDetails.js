@@ -107,7 +107,7 @@ export default class EventDetails extends React.Component {
 
                 <hr />
                 <h3>To donate for this event, click below </h3>
-                <TakeMoney />
+                <TakeMoney eventId={this.state.id} email={localStorage.username}/>
 
               </div>
               <div className="card card-block">

@@ -150,9 +150,11 @@ app.on('stormpath.ready', function() {
 var stripe = require("stripe")("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
 
 app.post('/api/payment', function(req, res, next) {
+
+
 // Get the credit card details submitted by the form
 var token = req.body.stripeToken;
-console.log(token); // undefined
+
 // Create a charge: this will charge the user's card
 var charge = stripe.charges.create({
   amount: 1000,
@@ -164,10 +166,11 @@ var charge = stripe.charges.create({
     if (err && err.type === 'StripeCardError') {
 
     }
-    else{
+    else {
       console.log('in the line 166');
-
-      UserController.updateAmountRaised('john@john.com', '57df283f49aee2355b243e7d', 10);
+      var e = req.body.email
+      var id = req.body.eventId
+      UserController.updateAmountRaised(e, id, 12);
       res.send('success');
       // User.find({"email": req.body.email})
 
