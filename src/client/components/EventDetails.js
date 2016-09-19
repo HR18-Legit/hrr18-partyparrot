@@ -8,43 +8,41 @@ export default class EventDetails extends React.Component {
     this.state = {
       id: props.event._id,
       shortenedUrl: '',
-      promoters: [],
-      eventbrite: this.props.event.eventbrite
+      promoters: []
     }
-
+    console.log(this)
   }
 
   componentWillMount() {
-
-    console.log(this.state.id);
+    window.scrollTo(0, 0);
     var id = this.state.id;
     $.ajax({
       url: `/events/${id}/promoters`,
       contentType: 'application/json',
       type: 'GET',
       success: (data) => {
-        console.log(data)
-        this.setState({
-          promoters: data
+        var promoters = data.map(function (promoter) {
+          promoter.score = 0;
+          return promoter;
         });
+        this.setState({
+          promoters: promoters
+        });
+        this.updateLeaderboard();
       },
       error: (err,data) => {
         console.error(err.toString());
       }
     });
-
   }
 
   componentDidMount() {
-    $('.card-text').append(this.props.event.eventbrite.description.html) // OK
+    $('.card-text').append(this.props.event.eventbrite.description.html)
   }
 
   componentWillUpdate(nextProps, nextState) {
-    console.log(this.props)
-    // update the event if promoters have signed up
-    // add this event to the new promoter's list of owned events
     if (this.promotersUpdated) {
-
+      this.promotersUpdated = false
       $.ajax({
         url: '/add/promoter',
         contentType: 'application/json',
@@ -55,25 +53,22 @@ export default class EventDetails extends React.Component {
           bitlyLink: nextState.shortenedUrl,
           eventbrite: this.props.event.eventbrite,
           bPoint: this.props.event.bPoint,
-          bGoal: this.props.event.bGoal,
+          bReward: this.props.event.bReward,
           sPoint: this.props.event.sPoint,
-          sGoal: this.props.event.sGoal,
+          sReward: this.props.event.sReward,
           gPoint: this.props.event.gPoint,
-          gGoal: this.props.event.gGoal,
+          gReward: this.props.event.gReward,
           name: this.props.event.name
        }),
         success: (conf) => {
           console.log(conf);
+          this.updateLeaderboard();
         },
         error: (err) => {
           console.log(err);
         }
       });
-      this.promotersUpdated = false
     }
-
-    // trigger a re-count of all links whenever the component updates
-    // this.bitlyLinkClicks(nextState.shortenedUrl);
   }
 
   render () {
@@ -86,15 +81,12 @@ export default class EventDetails extends React.Component {
             <h1 className="white-text h1-responsive">{this.props.event.name}</h1>
           </div>
         </div>
-
         <div className="wide">
           <div className="row margin-top">
             <div className="col-md-7">
               <div className="card card-block">
                 <h4 className="card-title">Start Promoting Now!</h4>
-
                 <hr />
-
                 <button className="btn btn-lg waves-effect waves-light"
                         style={{"backgroundColor":"#ff5a00"}}
                         onClick={() => {this.signupToPromote()}}>
@@ -102,13 +94,10 @@ export default class EventDetails extends React.Component {
                                           className="img-responsive img-fluid"
                                           style={{"width":"60px", "display":"inline"}} />
                 </button>
-
                 <input className="inputId" placeholder='subscribe above to generate a link!' value={this.state.shortenedUrl}/>
-
                 <hr />
-                <h3>To donate for this event, click below </h3>
+                <h4 className="card-title">Donate to support this event</h4>
                 <TakeMoney eventId={this.state.id} email={localStorage.username}/>
-
               </div>
               <div className="card card-block">
                 <h4 className="card-title">Decription</h4>
@@ -157,7 +146,13 @@ export default class EventDetails extends React.Component {
             </div>
             <div className="col-md-5">
               <div className="card card-block">
-                <h4 className="card-title">Leaderboard</h4>
+                <h4 className="card-title"
+                    style={{"display":"inline"}}>Leaderboard</h4>
+                <div className="fa fa-refresh"
+                        style={{"display":"inline", "color":"#000", "marginLeft":"2em"}}
+                        onClick={() => {this.updateLeaderboard()}}>
+                        <img className="img-responsive img-fluid"/>
+                </div>
                 <div className="table-responsive">
                   <table className="table table-hover">
                     <thead>
@@ -168,17 +163,11 @@ export default class EventDetails extends React.Component {
                     </thead>
                     <tbody>
                       {this.state.promoters.map(promoter =>
-
-                        <tr key={promoter.url}>
-                          <td>{promoter.username}</td>
-                          <td>{promoter.points}</td>
+                        <tr key={promoter._id}>
+                          <td>{promoter.userEmail}</td>
+                          <td>{promoter.score}</td>
                         </tr>
-
-                        )}
-
-                      {/*
-                        generate dynamic rows with usernames + link counts for all promoters
-                      */}
+                      )}
                     </tbody>
                   </table>
                 </div>
@@ -203,62 +192,72 @@ export default class EventDetails extends React.Component {
   }
 
   signupToPromote() {
-    var url = this.props.event.eventbrite.url + '#' + localStorage.username;
+    var url = this.props.event.eventbrite.url.replace('?aff=ebapi','/#') + localStorage.username;
     this.bitlyShortenLink(url);
   }
 
   bitlyShortenLink(url) {
-
     var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
     var promoters = this.state.promoters;
-
-    if (!promoters.filter((record) => {
-      return record.username === localStorage.username;
-    }).length) {
-
+    var thisPromoter = promoters.filter((record) => {
+      return record.userEmail === localStorage.username;
+    });
+    if (!thisPromoter[0]) {
       $.ajax({
         url: "https://api-ssl.bitly.com/v3/shorten?access_token=" + ACCESS_TOKEN + "&longUrl=" + url + "&format=txt",
         type: 'GET',
         success: (data) => {
-          console.log(data);
-          promoters.push({
-            username: localStorage.username,
-            url: data.data.url,
-            points: 0
-          });
           this.promotersUpdated = true;
+          promoters.push({
+            userEmail: localStorage.username,
+            bitlyLink: data.data.url
+          });
           this.setState({
             promoters: promoters,
             shortenedUrl: data.data.url
           });
-          console.log(this.state);
         },
         error: (data) => {
           console.error('Failed to get shortened URL. Error: ', data);
         }
       });
+    } else {
+      this.setState({
+        shortenedUrl: thisPromoter[0].bitlyLink
+      });
     }
   }
 
   updateLeaderboard() {
-
-    // required to get link counts for each promoter's link; will be displayed in leaderboard
-
     var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
-
-    // for each promoter's bitlink:
-
-    $.ajax({
-      url: "https://api-ssl.bitly.com/v3/link/clicks?access_token=" + ACCESS_TOKEN + "&link=" + bitlink,
-      type: 'GET',
-
-      success: (data) => {
-        this.setState({linkclickscount: data.data.link_clicks});
-      },
-      error: (data) => {
-        console.error('Failed to get link clicks. Error: ', data);
-      }
+    var promoters = this.state.promoters.slice();
+    var _this = this;
+    this.state.promoters.forEach((promoter, count) => {
+      $.ajax({
+        url: "https://api-ssl.bitly.com/v3/link/clicks?access_token=" + ACCESS_TOKEN + "&link=" + promoter.bitlyLink,
+        type: 'GET',
+        success: (data) => {
+          var score = data.data.link_clicks;
+          var prize = '';
+          if (score === _this.props.event.gPoint) {
+            alert(_this.props.event.gReward);
+          } else if (score === _this.props.event.sPoint) {
+            alert(_this.props.event.sReward);
+          } else if (score === _this.props.event.bPoint) {
+            alert(_this.props.event.bReward);
+          }
+          promoters[count].score = score;
+          promoters[count].prize = prize;
+          if (count === promoters.length - 1) {
+            _this.setState({
+              promoters: promoters
+            });
+          }
+        },
+        error: (data) => {
+          console.error('Failed to get link clicks. Error: ', data);
+        }
+      });
     });
   }
-
 }

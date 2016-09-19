@@ -19,7 +19,7 @@ export default class Category extends React.Component {
             </div>
           </div>
         </div>
-        <div className="modal fade" id={"events-" + this.props.category.id} tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div className="modal fade" id={"events-" + this.props.category.id} tabIndex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">

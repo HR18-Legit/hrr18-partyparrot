@@ -8,8 +8,7 @@ export default class CreateEvent extends React.Component {
     this.state = {
       events: [],
       event: [],
-      selectedEvent: {},
-      submitted: ""
+      selectedEvent: {}
     }
   }
 
@@ -24,7 +23,6 @@ export default class CreateEvent extends React.Component {
         )
     });
 
-    if(!this.state.submitted){
     return (
       <div className='create-event'>
         <div className="view hm-black-light">
@@ -51,21 +49,11 @@ export default class CreateEvent extends React.Component {
                     placeholder="Event City..."
                     style={{ 'borderLeft':'none' }}
                     ref="location" />
-
-            {/* <button className="searchBtn"
-                    type='button'
-                    onClick = { () => this.search(this.searchByName.value, this.searchByCity.value) }>
-
-                    <i  className="material-icons"
-                        style={{"marginTop":"3px", "color":"#666"}}>search</i>
-            </button> */}
-
           </form>
 
           {/* end realtime search */}
 
           <div className="row margin-top">
-
             <div className="col-xs-12">
               <hr />
               <h3 className="h2-responsive">Selected Event:</h3>
@@ -79,7 +67,6 @@ export default class CreateEvent extends React.Component {
             <div className="col-xs-12">
               <hr />
               <h2 className="h2-responsive">Prizes</h2>
-
               <img style={{ "width":"90px", 'borderRight':'1px solid rgba(0,0,0,.1)', 'padding':'20px' }} src="http://ssl.gstatic.com/onebox/sports/olympics/2016/medals2/ic_medal-large-gold_2x.png" alt="" />
               <input className="inputEventInfo" placeholder="Points to earn.." style={{ 'margin':"25px" }} ref ={ (input) => this.gPoint = input } />
               <input className="inputEventInfo" placeholder="Reward..." style={{ 'marginTop':"25px" }} ref ={ (input) => this.gReward = input }/>
@@ -104,32 +91,14 @@ export default class CreateEvent extends React.Component {
                 sReward: this.sReward.value,
                 bPoint: this.bPoint.value,
                 bReward: this.bReward.value,
-                event: this.state.selectedEvent
+                eventbrite: this.state.selectedEvent
               })}>Submit</button>
             </div>
           </div>
         </div>
       </div>
-      )
-    } else {
-
-    {/* what is happening here I have no idea */}
-
-      return (
-        <div>
-          <Event
-            selectedEvent = {this.state.selectedEvent}
-            gPoint = {this.gPoint.value}
-            gReward = {this.gReward.value}
-            sPoint = {this.sPoint.value}
-            sReward = {this.sReward.value}
-            bPoint = {this.bPoint.value}
-            bReward = {this.bReward.value} />
-        </div>
-      )
-    }
+    );
   }
-
 
   clearForm() {
     this.gPoint.value = "";
@@ -148,11 +117,8 @@ export default class CreateEvent extends React.Component {
       type: 'POST',
       data: JSON.stringify(eventObj),
       success: (data) => {
-        this.setState({data: data});
-        this.setState({submitted: "submitted"});
-
-        // don't understand what is happening once the event has been created.
-        // shouldn't this redirect us to the event details page?
+        console.log(data);
+        this.props.handler(eventObj);
       },
       error: (xhr, status, err) => {
         this.clearForm();

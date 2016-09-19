@@ -33,11 +33,11 @@ module.exports = {
                "bitlyLink": req.body.bitlyLink,
                "eventbrite" : req.body.eventbrite,
                "bPoint": req.body.bPoint,
-               "bGoal": req.body.bGoal,
+               "bReward": req.body.bReward,
                "sPoint": req.body.sPoint,
-               "sGoal": req.body.sGoal,
+               "sReward": req.body.sReward,
                "gPoint": req.body.gPoint,
-               "gGoal": req.body.gGoal,
+               "gReward": req.body.gReward,
                "name": req.body.name
                 });
 
@@ -115,7 +115,7 @@ module.exports = {
                     "bPoint": req.body.bPoint,
                     "bReward": req.body.bReward,
                     "amountRaised": req.body.amountRaised,
-                    "eventbrite": req.body.event
+                    "eventbrite": req.body.eventbrite
                 });
 
                 user.save(function (err) {
