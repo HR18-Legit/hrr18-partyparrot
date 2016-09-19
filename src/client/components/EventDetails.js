@@ -6,6 +6,7 @@ export default class EventDetails extends React.Component {
     super(props);
     this.promotersUpdated = false;
     this.bitlyKey = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
+
     this.state = {
       id: props.event._id,
       shortenedUrl: '',
@@ -165,6 +166,7 @@ export default class EventDetails extends React.Component {
             </div>
           </div>
         </div>
+        <div> donations board</div>
       </div>
     )
   }
