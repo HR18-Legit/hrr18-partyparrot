@@ -141,17 +141,20 @@ module.exports = {
 
     updateAmountRaised: function(e, id, amount){
         console.log(arguments);
-        findUser({"email": e})
-            .then(function(user){
-                user.events.forEach(function(event){
-                if(event._id == id){
-                    event.amountRaised = amount;
+        findUsers()
+            .then(function(users){
+                users.forEach(function(user){
+                    user.events.forEach(function(event) {
+                if(event._id == id) {
+                    event.amountRaised = Number(event.amountRaised) || 0;
+                    event.amountRaised += Number(amount);
 
                 user.save(function (err, user) {
                   if (err) {console.error(err)}
                   console.log("charge entered in db");
-              });
+                });
             }
+                })
           })
         })
     }

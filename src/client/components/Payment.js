@@ -1,32 +1,41 @@
 import React from 'react';
 import StripeCheckout from 'react-stripe-checkout';
-
+import axios from 'axios';
 
 export default class TakeMoney extends React.Component {
   constructor(props) {
   super(props)
+  console.log(999999, this.props);
 
-    this.state = { email: '', eventId:''}
+    this.state = { email: this.props.email, eventId: this.props.eventId};
   }
 
-  onToken (token) {
-    fetch('/api/payment', {
-      method: 'POST',
-      body: JSON.stringify({token: token, email: 'john@john.com', eventId: '57df283f49aee2355b243e7d'})
-    }).then(token => {
-      console.log(`I got your money!!!, ${token.email}`);
+  onToken(token) {
+    var that = this;
+    console.log(that.state);
+    axios.post('/api/payment', {token: token, email: that.state.email, eventId: that.state.eventId})
+  .then(token => {
+      console.log('I got your money!!!', token.email);
     });
   }
+
+  // onToken (token) {
+  //   fetch('/api/payment', {
+  //     method: 'POST',
+  //     body: JSON.stringify({token: token, email: 'john@john.com', eventId: '57df283f49aee2355b243e7d'})
+  //   }).then(token => {
+  //     console.log(`I got your money!!!, ${token.email}`);
+  //   });
+  // }
 
   render() {
     return (
 
       <div>
       <StripeCheckout
-        token={this.onToken}
+        token={this.onToken.bind(this)}
         stripeKey="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
-        email='john@john.com'
-      />
+        email=''/>
       </div>
     );
   }
