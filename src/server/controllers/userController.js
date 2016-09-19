@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-
 var Promoter = require('../models/promoting.js');
 var User = require('../models/users.js');
 var Event = require('../models/event.js');
@@ -10,7 +9,7 @@ var findUser = Q.nbind(User.findOne, User);
 var findUsers = Q.nbind(User.find, User);
 
 module.exports = {
-    getUser: function(req, res){
+  getUser: function(req, res){
         var event = {};
         console.log(req.params.email)
         findUser({"email": req.params.email})
@@ -23,15 +22,23 @@ module.exports = {
     },
 
     addPromoter: function(req, res){
-
+        console.log(req.body)
         findUser({"email": req.body.userEmail})
             .then(function(user) {
                 user.eventsPromoting.push({
-                    "userEmail": req.body.userEmail,
-                    "ownerEmail": req.body.ownerEmail,
-                    "ownerName": req.body.ownerName,
-                    "eventId": req.body.eventId,
-                    "bitlyLink": req.body.bitlyLink
+               "userEmail": req.body.userEmail,
+               "ownerEmail": req.body.ownerEmail,
+               "ownerName": req.body.ownerName,
+               "eventId": req.body.eventId,
+               "bitlyLink": req.body.bitlyLink,
+               "eventbrite" : req.body.eventbrite,
+               "bPoint": req.body.bPoint,
+               "bGoal": req.body.bGoal,
+               "sPoint": req.body.sPoint,
+               "sGoal": req.body.sGoal,
+               "gPoint": req.body.gPoint,
+               "gGoal": req.body.gGoal,
+               "name": req.body.name
                 });
 
                 user.save(function(err) {
@@ -42,7 +49,6 @@ module.exports = {
             .catch(function(error) {
                 res.json( 404, {error: err} ) ;
             })
-        
     },
 
     getAllEvents: function (req, res, next) {

@@ -2,6 +2,8 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var middleware = './middleware/middleware';
+var _ = require('lodash')
+var axios = require('axios')
 
 var path = require('path');
 var bodyParser = require('body-parser');
@@ -97,7 +99,7 @@ app.get('/user/:email', stormpath.loginRequired, UserController.getUser);
 app.get('/events', UserController.getAllEvents);
 
 // Returns one event
-app.get('/events/:id', stormpath.loginRequired, UserController.getEvent);
+app.get('/events/:id', UserController.getEvent);
 
 // Returns single user's events
 app.get('/user/:email/events', stormpath.loginRequired, UserController.getUserEvents);
@@ -178,5 +180,6 @@ var charge = stripe.charges.create({
   });
 
 });
+
 
 module.exports = app;

@@ -30,7 +30,6 @@ export default class PromoterLeft extends React.Component {
       right: 100
     }
 
-
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
         <Card style={cardstyles}>
