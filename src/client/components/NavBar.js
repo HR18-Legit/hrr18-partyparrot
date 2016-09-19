@@ -22,7 +22,12 @@ export default class NavBar extends React.Component {
                 <Authenticated>
                 <li className="nav-item">
                   <button className="btn-flat waves-effect waves-light btn-light">
-                    <a href="/profile"> Profile </a>
+                    <a href="/profile"> Orginizers</a>
+                  </button>
+                </li>
+                   <li className="nav-item">
+                  <button className="btn-flat waves-effect waves-light btn-light">
+                    <a href="/promoter"> Promoters </a>
                   </button>
                 </li>
                 <li className="nav-item">
