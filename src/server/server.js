@@ -97,7 +97,7 @@ app.get('/user/:email', stormpath.loginRequired, UserController.getUser);
 app.get('/events', UserController.getAllEvents);
 
 // Returns one event
-app.get('/events/:id', stormpath.loginRequired, UserController.getEvent);
+app.get('/events/:id', UserController.getEvent);
 
 // Returns single user's events
 app.get('/user/:email/events', stormpath.loginRequired, UserController.getUserEvents);

@@ -34,6 +34,7 @@ export default class PromoterLeft extends React.Component {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
         <Card style={cardstyles}>
+        {console.log('left', this.props)}
           <CardHeader
             title={this.props.data.firstName}
             subtitle={this.props.data.lastName}
