@@ -106,7 +106,7 @@ export default class EventDetails extends React.Component {
                 <input className="inputId" placeholder='subscribe above to generate a link!' value={this.state.shortenedUrl}/>
 
                 <hr />
-
+                <h3>To donate for this event, click below </h3>
                 <TakeMoney />
 
               </div>
