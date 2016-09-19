@@ -3,17 +3,20 @@ import StripeCheckout from 'react-stripe-checkout';
 
 
 export default class TakeMoney extends React.Component {
+  constructor(props) {
+  super(props)
 
-  onToken  (token) {
-    fetch('/api/payment', {
-      method: 'POST',
-      body: JSON.stringify(token), eventId:'57df283f49aee2355b243e7d', email:'john@john.com',
-    }).then(token => {
-      alert(`I got your money!!!, ${token.email}`);
-    });
+    this.state = { email: '', eventId:''}
   }
 
-
+  onToken (token) {
+    fetch('/api/payment', {
+      method: 'POST',
+      body: JSON.stringify({token: token, email: 'john@john.com', eventId: '57df283f49aee2355b243e7d'})
+    }).then(token => {
+      console.log(`I got your money!!!, ${token.email}`);
+    });
+  }
 
   render() {
     return (
@@ -22,11 +25,14 @@ export default class TakeMoney extends React.Component {
       <StripeCheckout
         token={this.onToken}
         stripeKey="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
+        email='john@john.com'
       />
       </div>
     );
   }
 }
+
+        // eventId='57df283f49aee2355b243e7d'
 
 // var PaymentForm = React.createClass({
 //   mixins: [  ],

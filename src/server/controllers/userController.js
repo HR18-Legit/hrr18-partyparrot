@@ -49,6 +49,7 @@ module.exports = {
             .catch(function(error) {
                 res.json( 404, {error: err} ) ;
             })
+
     },
 
     getAllEvents: function (req, res, next) {
@@ -65,7 +66,7 @@ module.exports = {
     getEvent: function(req, res){
         findUsers()
             .then(function(users){
-                var result = []; 
+                var result = [];
                 users.forEach(function(user){
                     user.events.forEach(function(event){
                         if(event._id == req.params.id){
@@ -83,7 +84,7 @@ module.exports = {
     getPromoters: function(req, res) {
         findUsers()
             .then(function(users){
-                var results = []; 
+                var results = [];
 
                 users.forEach(function(user) {
                     user.eventsPromoting.forEach(function(eventPromoting) {
@@ -124,11 +125,11 @@ module.exports = {
             })
 
 
-        
+
     },
 
     getUserEvents: function(req,res) {
-        findUser( {"email": req.params.email} ) 
+        findUser( {"email": req.params.email} )
             .then(function(user){
                 console.log(user);
                 res.json(user.events);
@@ -136,5 +137,24 @@ module.exports = {
             .catch(function(err){
                 res.json({error: err})
             })
+    },
+
+    updateAmountRaised: function(e, id, amount){
+        console.log(arguments);
+        findUser({"email": e})
+            .then(function(user){
+                user.events.forEach(function(event){
+                if(event._id == id){
+                    event.amountRaised = amount;
+
+                user.save(function (err, user) {
+                  if (err) {console.error(err)}
+                  console.log("charge entered in db");
+              });
+            }
+          })
+        })
     }
+
+
 };
