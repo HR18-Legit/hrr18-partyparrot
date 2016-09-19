@@ -10,9 +10,11 @@ export default class EventDetails extends React.Component {
       shortenedUrl: '',
       promoters: []
     }
+    console.log(this)
   }
 
   componentWillMount() {
+    window.scrollTo(0, 0);
     var id = this.state.id;
     $.ajax({
       url: `/events/${id}/promoters`,
@@ -35,7 +37,7 @@ export default class EventDetails extends React.Component {
   }
 
   componentDidMount() {
-    $('.card-text').append(this.props.event.eventbrite.description.html) // OK
+    $('.card-text').append(this.props.event.eventbrite.description.html)
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -147,7 +149,7 @@ export default class EventDetails extends React.Component {
                 <h4 className="card-title"
                     style={{"display":"inline"}}>Leaderboard</h4>
                 <div className="fa fa-refresh"
-                        style={{"display":"inline", "color":"#000", "margin-left":"2em"}}
+                        style={{"display":"inline", "color":"#000", "marginLeft":"2em"}}
                         onClick={() => {this.updateLeaderboard()}}>
                         <img className="img-responsive img-fluid"/>
                 </div>

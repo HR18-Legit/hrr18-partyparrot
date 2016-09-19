@@ -76,6 +76,7 @@ createCategoryList() {
   }
 
   handler(event) {
+    console.log(event);
     this.setState({
       selectedEvent: event
     });

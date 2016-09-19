@@ -115,7 +115,7 @@ module.exports = {
                     "bPoint": req.body.bPoint,
                     "bReward": req.body.bReward,
                     "amountRaised": req.body.amountRaised,
-                    "eventbrite": req.body.event
+                    "eventbrite": req.body.eventbrite
                 });
 
                 user.save(function (err) {
