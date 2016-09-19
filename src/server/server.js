@@ -2,6 +2,8 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var middleware = './middleware/middleware';
+var _ = require('lodash')
+var axios = require('axios')
 
 var path = require('path');
 var bodyParser = require('body-parser');
@@ -178,5 +180,6 @@ var charge = stripe.charges.create({
   });
 
 });
+
 
 module.exports = app;

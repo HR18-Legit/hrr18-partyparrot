@@ -52310,11 +52310,11 @@
 	    var _this = _possibleConstructorReturn(this, (EventDetails.__proto__ || Object.getPrototypeOf(EventDetails)).call(this, props));
 	
 	    _this.promotersUpdated = false;
-	
 	    _this.state = {
 	      id: props.event._id,
 	      shortenedUrl: '',
-	      promoters: []
+	      promoters: [],
+	      eventbrite: _this.props.event.eventbrite
 	    };
 	
 	    return _this;
@@ -52327,7 +52327,6 @@
 	
 	      console.log(this.state.id);
 	      var id = this.state.id;
-	
 	      $.ajax({
 	        url: '/events/' + id + '/promoters',
 	        contentType: 'application/json',
@@ -52351,6 +52350,7 @@
 	  }, {
 	    key: 'componentWillUpdate',
 	    value: function componentWillUpdate(nextProps, nextState) {
+	      console.log(this.props);
 	      // update the event if promoters have signed up
 	      // add this event to the new promoter's list of owned events
 	      if (this.promotersUpdated) {
@@ -52362,7 +52362,15 @@
 	          data: JSON.stringify({
 	            userEmail: localStorage.username,
 	            eventId: this.state.id,
-	            bitlyLink: nextState.shortenedUrl
+	            bitlyLink: nextState.shortenedUrl,
+	            eventbrite: this.props.event.eventbrite,
+	            bPoint: this.props.event.bPoint,
+	            bGoal: this.props.event.bGoal,
+	            sPoint: this.props.event.sPoint,
+	            sGoal: this.props.event.sGoal,
+	            gPoint: this.props.event.gPoint,
+	            gGoal: this.props.event.gGoal,
+	            name: this.props.event.name
 	          }),
 	          success: function success(conf) {
 	            console.log(conf);
@@ -52371,7 +52379,6 @@
 	            console.log(err);
 	          }
 	        });
-	
 	        this.promotersUpdated = false;
 	      }
 	
@@ -55167,7 +55174,6 @@
 	        _react2.default.createElement(
 	          _Card.Card,
 	          { style: cardstyles },
-	          console.log('left', this.props),
 	          _react2.default.createElement(_Card.CardHeader, {
 	            title: this.props.data.firstName,
 	            subtitle: this.props.data.lastName,
@@ -68550,7 +68556,6 @@
 	        padding: 100,
 	        margin: 10,
 	        display: 'inline-block',
-	        fontFamily: 'monospace',
 	        fontSize: '32',
 	        textAlign: 'center',
 	        right: 200,
@@ -68565,11 +68570,11 @@
 	        _react2.default.createElement(
 	          _Card.Card,
 	          { style: styles },
-	          console.log(this.props.data),
+	          console.log(this.props.data.eventsPromoting.length > 0 && this.props.data.eventsPromoting[0].gPoint),
 	          _react2.default.createElement(
 	            _Card.CardText,
-	            { expandable: true },
-	            'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi. Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque. Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.'
+	            null,
+	            'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
 	          )
 	        )
 	      );

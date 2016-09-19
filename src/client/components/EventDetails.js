@@ -4,13 +4,12 @@ import TakeMoney from './Payment';
 export default class EventDetails extends React.Component {
   constructor(props) {
     super(props);
-
-    this.promotersUpdated = false;
-
+    this.promotersUpdated = false
     this.state = {
       id: props.event._id,
       shortenedUrl: '',
-      promoters: []
+      promoters: [],
+      eventbrite: this.props.event.eventbrite
     }
 
   }
@@ -19,7 +18,6 @@ export default class EventDetails extends React.Component {
 
     console.log(this.state.id);
     var id = this.state.id;
-
     $.ajax({
       url: `/events/${id}/promoters`,
       contentType: 'application/json',
@@ -42,6 +40,7 @@ export default class EventDetails extends React.Component {
   }
 
   componentWillUpdate(nextProps, nextState) {
+    console.log(this.props)
     // update the event if promoters have signed up
     // add this event to the new promoter's list of owned events
     if (this.promotersUpdated) {
@@ -53,8 +52,16 @@ export default class EventDetails extends React.Component {
         data: JSON.stringify({
           userEmail: localStorage.username,
           eventId: this.state.id,
-          bitlyLink: nextState.shortenedUrl
-        }),
+          bitlyLink: nextState.shortenedUrl,
+          eventbrite: this.props.event.eventbrite,
+          bPoint: this.props.event.bPoint,
+          bGoal: this.props.event.bGoal,
+          sPoint: this.props.event.sPoint,
+          sGoal: this.props.event.sGoal,
+          gPoint: this.props.event.gPoint,
+          gGoal: this.props.event.gGoal,
+          name: this.props.event.name
+       }),
         success: (conf) => {
           console.log(conf);
         },
@@ -62,9 +69,7 @@ export default class EventDetails extends React.Component {
           console.log(err);
         }
       });
-
-      this.promotersUpdated = false;
-
+      this.promotersUpdated = false
     }
 
     // trigger a re-count of all links whenever the component updates
