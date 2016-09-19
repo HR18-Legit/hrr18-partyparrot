@@ -12,33 +12,25 @@ export default class Promoters extends React.Component {
       firstName: '',
       lastName: '',
       photo: '',
-      eventsPromoting: []
+      events: []
     }
     this.componentDidMount = this.componentDidMount.bind(this)
   }
   componentDidMount () {
     const that = this
-    const events = []
     const user = localStorage.getItem('username')
     const url = `/user/${user}`
     this.serverRequest = axios.get(url).then(function (promoter) {
+    //  console.log(promoter)
       that.setState({
         firstName: promoter.data.firstName,
         lastName: promoter.data.lastName,
-        photo: promoter.data.photo
+        photo: promoter.data.photo,
+        events: promoter.data.eventsPromoting
       })
-      _.each(promoter.data.eventsPromoting, function (event) {
-        const url = `/events/${event.eventId}`
-        axios.get(url).then(function (event) {
-          events.push(event)
-        })
-      })
-    }).then(
-      that.setState({
-        eventsPromoting: events
-      })
-     )
-  }
+    })
+  
+ }
   componentWillUnmount () {
     this.serverRequest.abort()
   }
