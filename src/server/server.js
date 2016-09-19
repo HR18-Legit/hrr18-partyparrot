@@ -65,7 +65,7 @@ app.use(stormpath.init(app, {
       if (err) { console.error(err) }
       res.redirect(302, 'http://localhost:8080/clientlogin')
     })
-    
+
   },
     postLoginHandler: function (account, req, res, next) {
       console.log('User:', account, 'just logged in!');
@@ -152,30 +152,38 @@ var stripe = require("stripe")("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
 app.post('/api/payment', function(req, res, next) {
 // Get the credit card details submitted by the form
 var token = req.body.stripeToken;
-
+console.log(token); // undefined
 // Create a charge: this will charge the user's card
 var charge = stripe.charges.create({
   amount: 1000,
   currency: "usd",
   source: token,
-  description: "Example charge"
+  description: "Example charge",
+  metadata: {}
   }, function(err, charge) {
     if (err && err.type === 'StripeCardError') {
 
-    }else{
-      User.find({"email": req.body.email})
-        .then(function(user){
-          user.events.forEach(function(event){
-            if(event._id === req.body.eventId){
-              event.amountRaised = Number(event.amountRaised) + charge.amount;
+    }
+    else{
+      console.log('in the line 166');
 
-              user.save(function (err) {
-                  if (err) {console.error(err)}
-                  res.status(201).json({message: 'Amount raised updated'});
-              });
-            }
-          })
-        })
+      UserController.updateAmountRaised('john@john.com', '57df283f49aee2355b243e7d', 10);
+      res.send('success');
+      // User.find({"email": req.body.email})
+
+      //   .then(function(user){
+      //     console.log(user, 1111111)
+      //     user.events.forEach(function(event){
+      //       if(event._id === req.body.eventId){
+      //         event.amountRaised = Number(event.amountRaised) + charge.amount;
+
+      //         user.save(function (err) {
+      //             if (err) {console.error(err)}
+      //             res.status(201).json({message: 'Amount raised updated'});
+      //         });
+      //       }
+      //     })
+      //   })
     }
   });
 
