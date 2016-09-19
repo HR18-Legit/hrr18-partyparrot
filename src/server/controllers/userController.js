@@ -26,19 +26,19 @@ module.exports = {
         findUser({"email": req.body.userEmail})
             .then(function(user) {
                 user.eventsPromoting.push({
-               "userEmail": req.body.userEmail,
-               "ownerEmail": req.body.ownerEmail,
-               "ownerName": req.body.ownerName,
-               "eventId": req.body.eventId,
-               "bitlyLink": req.body.bitlyLink,
-               "eventbrite" : req.body.eventbrite,
-               "bPoint": req.body.bPoint,
-               "bReward": req.body.bReward,
-               "sPoint": req.body.sPoint,
-               "sReward": req.body.sReward,
-               "gPoint": req.body.gPoint,
-               "gReward": req.body.gReward,
-               "name": req.body.name
+                    "userEmail": req.body.userEmail,
+                    "ownerEmail": req.body.ownerEmail,
+                    "ownerName": req.body.ownerName,
+                    "eventId": req.body.eventId,
+                    "bitlyLink": req.body.bitlyLink,
+                    "eventbrite" : req.body.eventbrite,
+                    "bPoint": req.body.bPoint,
+                    "bReward": req.body.bReward,
+                    "sPoint": req.body.sPoint,
+                    "sReward": req.body.sReward,
+                    "gPoint": req.body.gPoint,
+                    "gReward": req.body.gReward,
+                    "name": req.body.name
                 });
 
                 user.save(function(err) {
@@ -115,7 +115,8 @@ module.exports = {
                     "bPoint": req.body.bPoint,
                     "bReward": req.body.bReward,
                     "amountRaised": req.body.amountRaised,
-                    "eventbrite": req.body.eventbrite
+                    "eventbrite": req.body.eventbrite,
+                    "donors": req.body.donors
                 });
 
                 user.save(function (err) {
@@ -148,6 +149,20 @@ module.exports = {
                 if(event._id == id) {
                     event.amountRaised = Number(event.amountRaised) || 0;
                     event.amountRaised += Number(amount);
+                    if(event.donors){
+                        var donors = JSON.parse(event.donors);
+                        if(donors[e]){
+                            donors[e] += Number(amount);
+                        }else{
+                            donors[e] = Number(amount);
+                        }
+                        event.donors = JSON.stringify(donors);
+                    }else{
+                        var donors = {};
+                        donors[e] = Number(amount);
+                        event.donors = JSON.stringify(donors);
+                    }
+                    
 
                 user.save(function (err, user) {
                   if (err) {console.error(err)}

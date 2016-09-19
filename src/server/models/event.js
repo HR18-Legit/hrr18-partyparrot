@@ -11,6 +11,7 @@ var eventSchema = new mongoose.Schema({
   bPoint: Number,
   bReward: String,
   amountRaised: Number,
+  donors: { type : mongoose.Schema.Types.Mixed },
   eventbrite: {},
   created_at: {type:Date, default: Date.now}
 });
