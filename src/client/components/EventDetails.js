@@ -4,20 +4,18 @@ import TakeMoney from './Payment';
 export default class EventDetails extends React.Component {
   constructor(props) {
     super(props);
-    this.promotersUpdated = false
+    this.promotersUpdated = false;
+    this.bitlyKey = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
     this.state = {
       id: props.event._id,
       shortenedUrl: '',
       promoters: []
     }
-    console.log(this)
   }
 
   componentWillMount() {
-    window.scrollTo(0, 0);
-    var id = this.state.id;
     $.ajax({
-      url: `/events/${id}/promoters`,
+      url: `/events/${this.state.id}/promoters`,
       contentType: 'application/json',
       type: 'GET',
       success: (data) => {
@@ -37,12 +35,14 @@ export default class EventDetails extends React.Component {
   }
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     $('.card-text').append(this.props.event.eventbrite.description.html)
   }
 
   componentWillUpdate(nextProps, nextState) {
     if (this.promotersUpdated) {
-      this.promotersUpdated = false
+      this.promotersUpdated = false;
+      this.updateLeaderboard();
       $.ajax({
         url: '/add/promoter',
         contentType: 'application/json',
@@ -62,7 +62,6 @@ export default class EventDetails extends React.Component {
        }),
         success: (conf) => {
           console.log(conf);
-          this.updateLeaderboard();
         },
         error: (err) => {
           console.log(err);
@@ -104,47 +103,10 @@ export default class EventDetails extends React.Component {
                 <hr />
                 <p className="card-text"> </p>
               </div>
-              <div className="card card-block">
-                <h4 className="card-title">Prizes</h4>
-                <hr />
-                <div className="row">
-                  <div className="col-xs-3 col-md-2">
-                    <img style={{"width":"50px"}} src="http://ssl.gstatic.com/onebox/sports/olympics/2016/medals2/ic_medal-large-gold_2x.png" alt="" />
-                  </div>
-                  <div className="col-md-4" style={{"marginTop":"20px"}}>
-                    <h2 className="h2-responsive">{this.props.event.gPoint}</h2>
-                  </div>
-                  <div className="col-md-6" style={{"marginTop":"20px"}}>
-                    <h4 className="h4-responsive">{this.props.event.gReward}</h4>
-                  </div>
-                </div>
-                <hr />
-                <div className="row">
-                  <div className="col-xs-2">
-                    <img style={{"width":"50px"}} src="http://ssl.gstatic.com/onebox/sports/olympics/2016/medals2/ic_medal-large-silver_2x.png" alt="" />
-                  </div>
-                  <div className="col-md-4" style={{"marginTop":"20px"}}>
-                    <h2 className="h2-responsive">{this.props.event.sPoint}</h2>
-                  </div>
-                  <div className="col-md-6" style={{"marginTop":"20px"}}>
-                    <h4 className="h4-responsive">{this.props.event.sReward}</h4>
-                  </div>
-                </div>
-                <hr />
-                <div className="row">
-                  <div className="col-xs-2">
-                    <img style={{"width":"50px"}} src="http://ssl.gstatic.com/onebox/sports/olympics/2016/medals2/ic_medal-large-bronze_2x.png" alt="" />
-                  </div>
-                  <div className="col-md-4" style={{"marginTop":"20px"}}>
-                    <h2 className="h2-responsive">{this.props.event.bPoint}</h2>
-                  </div>
-                  <div className="col-md-6" style={{"marginTop":"20px"}}>
-                    <h4 className="h4-responsive">{this.props.event.bReward}</h4>
-                  </div>
-                </div>
-              </div>
+
             </div>
             <div className="col-md-5">
+
               <div className="card card-block">
                 <h4 className="card-title"
                     style={{"display":"inline"}}>Leaderboard</h4>
@@ -153,17 +115,20 @@ export default class EventDetails extends React.Component {
                         onClick={() => {this.updateLeaderboard()}}>
                         <img className="img-responsive img-fluid"/>
                 </div>
+
                 <div className="table-responsive">
                   <table className="table table-hover">
                     <thead>
                       <tr>
-                        <th>Username</th>
-                        <th>Points</th>
+                        <th>&nbsp;</th>
+                        <th>Promoter</th>
+                        <th>Clicks</th>
                       </tr>
                     </thead>
                     <tbody>
                       {this.state.promoters.map(promoter =>
                         <tr key={promoter._id}>
+                          <td style={{"textAlign":"center"}}><img style={{"display":"inline"}} src={promoter.prize}/></td>
                           <td>{promoter.userEmail}</td>
                           <td>{promoter.score}</td>
                         </tr>
@@ -172,16 +137,29 @@ export default class EventDetails extends React.Component {
                   </table>
                 </div>
               </div>
-              <div className="author-box">
-                <div className="row">
-                  <h3 className="h3-responsive text-xs-center">About Event Organizer</h3>
-                  <hr />
-                  <div className="col-xs-12" style={{"textAlign":"center"}}>
-                    <img src={this.props.event.eventbrite ? this.props.event.eventbrite.logo.url : ''} alt="" className=" img-circle z-depth-2" style={{"maxWidth":"200px"}} />
-                  </div>
-                  <div className="col-xs-12">
-                    <p className="text-xs-center margin-top"><strong>{this.props.event.name}</strong></p>
-                  </div>
+
+              <div className="card card-block">
+                <h4 className="card-title">Earn Incentives</h4>
+                <div className="table-responsive">
+                  <table className="table table-hover">
+                    <tbody>
+                        <tr>
+                          <td style={{"textAlign":"center"}}><img style={{"display":"inline"}} src="http://ssl.gstatic.com/onebox/sports/olympics/2016/medals2/ic_medal-small-gold_2x.png"/></td>
+                          <td style={{"verticalAlign":"middle"}}>{this.props.event.gPoint} clicks:</td>
+                          <td style={{"verticalAlign":"middle"}}>{this.props.event.gReward}</td>
+                        </tr>
+                        <tr>
+                          <td style={{"textAlign":"center"}}><img style={{"display":"inline"}} src="http://ssl.gstatic.com/onebox/sports/olympics/2016/medals2/ic_medal-small-silver_2x.png"/></td>
+                          <td style={{"verticalAlign":"middle"}}>{this.props.event.sPoint} clicks:</td>
+                          <td style={{"verticalAlign":"middle"}}>{this.props.event.sReward}</td>
+                        </tr>
+                        <tr>
+                          <td style={{"textAlign":"center"}}><img style={{"display":"inline"}} src="http://ssl.gstatic.com/onebox/sports/olympics/2016/medals2/ic_medal-small-bronze_2x.png"/></td>
+                          <td style={{"verticalAlign":"middle"}}>{this.props.event.bPoint} clicks:</td>
+                          <td style={{"verticalAlign":"middle"}}>{this.props.event.bReward}</td>
+                        </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
@@ -197,14 +175,13 @@ export default class EventDetails extends React.Component {
   }
 
   bitlyShortenLink(url) {
-    var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
     var promoters = this.state.promoters;
     var thisPromoter = promoters.filter((record) => {
       return record.userEmail === localStorage.username;
     });
     if (!thisPromoter[0]) {
       $.ajax({
-        url: "https://api-ssl.bitly.com/v3/shorten?access_token=" + ACCESS_TOKEN + "&longUrl=" + url + "&format=txt",
+        url: `https://api-ssl.bitly.com/v3/shorten?access_token=${this.bitlyKey}&longUrl=${url}&format=txt`,
         type: 'GET',
         success: (data) => {
           this.promotersUpdated = true;
@@ -229,22 +206,21 @@ export default class EventDetails extends React.Component {
   }
 
   updateLeaderboard() {
-    var ACCESS_TOKEN = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
     var promoters = this.state.promoters.slice();
     var _this = this;
     this.state.promoters.forEach((promoter, count) => {
       $.ajax({
-        url: "https://api-ssl.bitly.com/v3/link/clicks?access_token=" + ACCESS_TOKEN + "&link=" + promoter.bitlyLink,
+        url: `https://api-ssl.bitly.com/v3/link/clicks?access_token=${this.bitlyKey}&link=${promoter.bitlyLink}`,
         type: 'GET',
         success: (data) => {
           var score = data.data.link_clicks;
           var prize = '';
           if (score === _this.props.event.gPoint) {
-            alert(_this.props.event.gReward);
+            prize = 'http://ssl.gstatic.com/onebox/sports/olympics/2016/medals2/ic_medal-small-gold_1x.png';
           } else if (score === _this.props.event.sPoint) {
-            alert(_this.props.event.sReward);
+            prize = 'http://ssl.gstatic.com/onebox/sports/olympics/2016/medals2/ic_medal-small-silver_1x.png'
           } else if (score === _this.props.event.bPoint) {
-            alert(_this.props.event.bReward);
+            prize = 'http://ssl.gstatic.com/onebox/sports/olympics/2016/medals2/ic_medal-small-bronze_1x.png'
           }
           promoters[count].score = score;
           promoters[count].prize = prize;

@@ -26,7 +26,6 @@ export default class App extends React.Component {
       <div className="app">
         <NavBar />
         {childrenWithProps}
-        <Footer />
       </div>
     )
   }
@@ -54,7 +53,7 @@ createCategoryList() {
       var category_id = event.eventbrite.category_id;
       if (category_id) {
         $.ajax({
-          url: `https://www.eventbriteapi.com/v3/categories/${category_id}/?token=YZO3HZ5MJZYKY6QU64H2`,
+          url: `https://www.eventbriteapi.com/v3/categories/${category_id}/?token=7RMWHXP6CK2F2HSP6OSI`,
           type: 'GET',
           success: function(category) {
             if (!done.includes(category.id)) {
