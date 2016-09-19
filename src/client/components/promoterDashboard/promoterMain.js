@@ -3,6 +3,8 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import PromoterLeft from './promoterLeft'
 import PromoterRight from './promoterRight'
 import axios from 'axios'
+import {red500, deepOrange900, amber600, grey500} from 'material-ui/styles/colors';
+
 export default class Promoters extends React.Component {
   constructor (props) {
     super(props)
@@ -19,6 +21,7 @@ export default class Promoters extends React.Component {
     const user = localStorage.getItem('username')
     const url = `/user/${user}`
     this.serverRequest = axios.get(url).then(function (promoter) {
+      console.log(promoter)
       that.setState({
         firstName: promoter.data.firstName,
         lastName: promoter.data.lastName,
@@ -26,8 +29,7 @@ export default class Promoters extends React.Component {
         events: promoter.data.eventsPromoting
       })
     })
-  
- }
+  }
   componentWillUnmount () {
     this.serverRequest.abort()
   }

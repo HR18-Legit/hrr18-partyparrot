@@ -14,15 +14,17 @@ import ActionGrade from 'material-ui/svg-icons/action/grade'
 import {red500, deepOrange900, amber600, grey500} from 'material-ui/styles/colors';
 import Dialog from 'material-ui/Dialog'
 import injectTapEventPlugin from 'react-tap-event-plugin'
+import axios from 'axios'
 
 
 export default class PromoterRight extends React.Component {
   constructor (props) {
     super(props)
-    this.state = {
-      open: false
-    }
   }
+
+  getLinkCount (url) {
+  }
+
   render () {
     const styles = {
       padding: 160,
@@ -31,7 +33,7 @@ export default class PromoterRight extends React.Component {
       fontSize: '32',
       right: 250,
       left: 'auto',
-      top: 120,
+      top: 100,
       position: 'fixed'
     }
     const appId = '1792047634412186'
@@ -47,7 +49,7 @@ export default class PromoterRight extends React.Component {
                  <FacebookButton element='a' url={event.bitlyLink} appId={appId}>
                    <SocialShare color={red500} />
                  </FacebookButton>
-                 <h6> {event.name} </h6>
+                 <a href={event.bitlyLink} target='_blank'> <h6> {event.name} </h6> </a>
                  <ActionGrade color={amber600} />
                    {event.gPoint}
                  <ActionGrade color={grey500} />
