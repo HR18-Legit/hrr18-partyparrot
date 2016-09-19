@@ -7,7 +7,7 @@ export default class TakeMoney extends React.Component {
   onToken  (token) {
     fetch('/api/payment', {
       method: 'POST',
-      body: JSON.stringify(token),
+      body: JSON.stringify(token), eventId:'57df283f49aee2355b243e7d', email:'john@john.com',
     }).then(token => {
       alert(`I got your money!!!, ${token.email}`);
     });
