@@ -30,10 +30,16 @@ export default class PromoterRight extends React.Component {
         <Card style={styles}>
 
 
-{console.log(this.props.data.eventsPromoting.length > 0 && this.props.data.eventsPromoting[0].gPoint)}
+{console.log('rightside', this.props.data.events)}
      
           <CardText>
-           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          <div>
+          <span>
+           {this.props.data.events.map(function (event) {
+             return <h6> {event.name} </h6>
+           })}
+           </span>
+           </div>
           </CardText>
         </Card>   
       </MuiThemeProvider>
