@@ -182,7 +182,7 @@ export default class EventDetails extends React.Component {
                     </tbody>
                   </table>
                 </div>
-        <div> <MoneyBoard donors={this.props.event}/></div>
+        
               </div>
             </div>
           </div>
