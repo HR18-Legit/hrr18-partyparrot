@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-class ImageUpload extends Component {
+export default class ImageUpload extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
 
-export default class MoneyBoard extends React {
+export default class MoneyBoard extends Component {
   constructor(props){
     super(props);
-    this.state = {id:'', event:[]}
+
+    this.state = {};
+    // console.log(this.state.donors, 888);
+    // console.log(localStorage.getItem('donors'), 9999);
+
+    this.temp = JSON.parse(this.props.donors.donors);
+    console.log(props);
+    console.log(this.temp);
   }
-}
 
 
-render(){
+
+render() {
+  if(true) {
   return (
-<div className="col-md-5">
+            <div className="col-md-5">
               <div className="card card-block">
                 <h4 className="card-title">Donation Board</h4>
                 <div className="table-responsive">
@@ -22,15 +30,22 @@ render(){
                       </tr>
                     </thead>
                     <tbody>
-                      {this.state.event.map(event =>
-                        <tr key={this.state.id}>
-                          <td>{event.username}</td>
-                          <td>{event.amount}</td>
+                      <tr key={'j@jonathonfritz.com'}>
+                          <td>j@jonathonfritz.com</td>
+                          <td>{this.temp['j@jonathonfritz.com']}</td>
                         </tr>
-                        )}
+
                     </tbody>
                   </table>
                 </div>
               </div>
+            </div>
             )
           }
+          else {
+            return (
+              <div> No donors - please make a donation </div>
+              )
+          }
+}
+}

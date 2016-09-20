@@ -5,7 +5,7 @@ import axios from 'axios';
 export default class TakeMoney extends React.Component {
   constructor(props) {
   super(props);
-  console.log(999999, this.props);
+  console.log(this.props);
 
     this.state = { email: this.props.email,
                   eventId: this.props.eventId,
@@ -21,15 +21,12 @@ export default class TakeMoney extends React.Component {
     })
     .then(token => {
       console.log('I got your money!!!', token.email);
-      axios.get('/event/', {
-        params: {
-          eventId: that.state.eventId
-        }
-      })
-      .then(eventInfo => {
-        console.log('getting your events', eventinfo);
-        this.setState({eventinfo: ''});
-      });
+      // axios.get('/events/' + that.state.eventId)
+      // .then(eventInfo => {
+      //   console.log('getting your events', eventInfo);
+      //   localStorage.setItem('donors', eventInfo.data);
+      //   console.log(localStorage.getItem('donors'), 2888);
+      // });
     });
   }
 
