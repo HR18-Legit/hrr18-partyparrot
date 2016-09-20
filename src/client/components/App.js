@@ -53,7 +53,7 @@ createCategoryList() {
       var category_id = event.eventbrite.category_id;
       if (category_id) {
         $.ajax({
-          url: `https://www.eventbriteapi.com/v3/categories/${category_id}/?token=7RMWHXP6CK2F2HSP6OSI`,
+          url: `https://www.eventbriteapi.com/v3/categories/${category_id}/?token=S7EHOAZMNQCFF27IFV`,
           type: 'GET',
           success: function(category) {
             if (!done.includes(category.id)) {
