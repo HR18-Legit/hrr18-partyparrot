@@ -1,16 +1,21 @@
 import React from 'react';
 import TakeMoney from './Payment';
+import MoneyBoard from './Moneyboard';
 
 export default class EventDetails extends React.Component {
   constructor(props) {
     super(props);
     this.promotersUpdated = false;
+
     this.bitlyKey = "d1ce0c8eb8e23feb1a75a702d9c4148e522215f7";
+
     this.state = {
       id: props.event._id,
       shortenedUrl: '',
       promoters: []
-    }
+    };
+
+
   }
 
   componentWillMount() {
@@ -70,6 +75,22 @@ export default class EventDetails extends React.Component {
     }
   }
 
+  // onToken(token) {
+  //   var that = this;
+  //   console.log(that.state);
+  //   axios.post('/api/payment', {
+  //     token: token, email: localStorage.username, eventId: that.state.id
+  //   })
+  //   .then(token => {
+  //     console.log('I got your money!!!', token.email);
+  //     axios.get('/events/' + that.state.eventId)
+  //     .then(eventInfo => {
+  //       console.log('getting your events', eventInfo);
+  //       this.setState({donors: eventInfo.data[0].donors});
+  //     });
+  //   });
+  // }
+
   render () {
     $('.modal-backdrop').remove() // Quickfix to remove the modal
     return (
@@ -96,7 +117,7 @@ export default class EventDetails extends React.Component {
                 <input className="inputId" placeholder='subscribe above to generate a link!' value={this.state.shortenedUrl}/>
                 <hr />
                 <h4 className="card-title">Donate to support this event</h4>
-                <TakeMoney eventId={this.state.id} email={localStorage.username}/>
+                <TakeMoney email={localStorage.username} eventId={this.state.id}/>
               </div>
               <div className="card card-block">
                 <h4 className="card-title">Decription</h4>
@@ -161,6 +182,7 @@ export default class EventDetails extends React.Component {
                     </tbody>
                   </table>
                 </div>
+        <div> <MoneyBoard donors={this.props.event}/></div>
               </div>
             </div>
           </div>

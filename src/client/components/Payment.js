@@ -4,20 +4,50 @@ import axios from 'axios';
 
 export default class TakeMoney extends React.Component {
   constructor(props) {
-  super(props)
-  console.log(999999, this.props);
+  super(props);
+  console.log(this.props);
 
-    this.state = { email: this.props.email, eventId: this.props.eventId};
+    this.state = { email: this.props.email,
+                  eventId: this.props.eventId,
+                  eventinfo: ''
+                  };
   }
 
   onToken(token) {
     var that = this;
     console.log(that.state);
-    axios.post('/api/payment', {token: token, email: that.state.email, eventId: that.state.eventId})
-  .then(token => {
+    axios.post('/api/payment', {
+      token: token, email: that.state.email, eventId: that.state.eventId
+    })
+    .then(token => {
       console.log('I got your money!!!', token.email);
+      // axios.get('/events/' + that.state.eventId)
+      // .then(eventInfo => {
+      //   console.log('getting your events', eventInfo);
+      //   localStorage.setItem('donors', eventInfo.data);
+      //   console.log(localStorage.getItem('donors'), 2888);
+      // });
     });
   }
+
+  render() {
+    return (
+
+      <div>
+      <StripeCheckout
+        token={this.onToken.bind(this)}
+        stripeKey="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
+        email=''
+       />
+      </div>
+    );
+  }
+}
+
+
+
+
+
 
   // onToken (token) {
   //   fetch('/api/payment', {
@@ -27,20 +57,6 @@ export default class TakeMoney extends React.Component {
   //     console.log(`I got your money!!!, ${token.email}`);
   //   });
   // }
-
-  render() {
-    return (
-
-      <div>
-      <StripeCheckout
-        token={this.onToken.bind(this)}
-        stripeKey="pk_test_6pRNASCoBOKtIshFeQd4XMUh"
-        email=''/>
-      </div>
-    );
-  }
-}
-
         // eventId='57df283f49aee2355b243e7d'
 
 // var PaymentForm = React.createClass({
