@@ -129,7 +129,7 @@ export default class CreateEvent extends React.Component {
   }
 
   search(keyword, location){
-    var url = `https://www.eventbriteapi.com/v3/events/search/?q=${keyword}&sort_by=best&location.address=${location}&token=BITQTGSTDM4GL6SOA4`;
+    var url = `https://www.eventbriteapi.com/v3/events/search/?q=${keyword}&sort_by=best&location.address=${location}&token=USM5NKFFO63WSZI3WVBX`;
     Request.get(url).then((response) => {
       this.setState({
         events: response.body.events
@@ -138,7 +138,7 @@ export default class CreateEvent extends React.Component {
   }
 
   searchId(id){
-    var url = `https://www.eventbriteapi.com/v3/events/${id}/?token=BITQTGSTDM4GL6SOA4`;
+    var url = `https://www.eventbriteapi.com/v3/events/${id}/?token=USM5NKFFO63WSZI3WVBX`;
     Request.get(url).then((response) => {
       this.setState({
         event: response.body
